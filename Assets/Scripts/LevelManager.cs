@@ -25,63 +25,83 @@ public class LevelManager : MonoBehaviour
     {
         /*
 
-        var
-        Pathway slots:
-        bool Array up
-        bool Array down
+        [Header("Pathway variables")]
+        private bool[] activePathwayUp = new bool[4];
+        private bool[] activePathwayDown = new bool[4];
 
-        bool onBrake
-        bool hasPlacedDown
+        private bool onBrake = false;
+        private bool hasPlacedDown = false;
+        //Todo (on place down = true)
 
-        pathLengthMax
-        pathLengthMin
+        [Serializefield] private float pathLengthMax = 1f;
+        [Serializefield] private float pathLengthMin = 1f;
 
-        placeChance //(chance = 1/placeChance)
+        [Serializefield] private float pauseLengthMax = 1f;
+        [Serializefield] private float pauseLengthMin = 1f;
 
-        [Serializefield] pathwayStructure x5 (bool array of 4 units 2 upp 2 down)
-        [Serializefield] pathwayCount
+        private float pathLength = 1f;
+
+        [Serializefield] private float placeChance = 1f; //(chance = 1/placeChance)
+
+        [Serializefield] private bool[] pathwayStructure1 = new bool[4]; // 2 high
+        [Serializefield] private bool[] pathwayStructure2 = new bool[4]; // single up
+        [Serializefield] private bool[] pathwayStructure3 = new bool[4]; // single down
+        [Serializefield] private bool[] pathwayStructure4 = new bool[4]; // double up
+        [Serializefield] private bool[] pathwayStructure5 = new bool[4]; // double down
+        //(bool array of 4 units 2 upp 2 down)
 
 
-        if(!on brake)
+        if(!onBrake)
         {
-            random length
+            pathLength = /random.range pathLengthMax pathLengthMin
 
-            bool on brake = false
-
-            has placed down = false
-            (on place down = true)
-
-            for(pahts.count)
+            for(int i = 0; i < pahts.count; i++)
             {
-                random between 1 and x
-                if 1 place
+                if(/random.range 1 placeChance == 1)
                 {
-                    random between 1 and 5     // Todo create vaiables from here and refine sudo code.
-                    place respective path
-                    if 4/5
-                    switch path count
-                    case 1 place next square
-                    case 2-3 random
-                    case 4 place prev square
+                    Switch random.range 1 5
+                    case1
+                    PlacePath(pathwayStructure1);
+                    case2
+                    PlacePath(pathwayStructure2);
+                    case3
+                    PlacePath(pathwayStructure3);
+                    case4
+                    PlacePath(pathwayStructure4);
+                    case5
+                    PlacePath(pathwayStructure5);
+
+                    (if 4/5                  )
+                    (switch path count       )
+                    (case 1 place next square)  // on PlacePath method.
+                    (case 2-3 random         )
+                    (case 4 place prev square)
                 }
             }
-            if !has placed down
+            if(!has placed down)
             {
-                random between 1 and 3 (down ones)
-                place respective path
-                if 3
-                switch path count
-                case 1 place next square
-                case 2-3 random
-                case 4 place prev square
+                Switch random.range 1 3
+                case1
+                PlacePath(pathwayStructure1);
+                case2
+                PlacePath(pathwayStructure3);
+                case3
+                PlacePath(pathwayStructure5);
+
+                (if 3                    )
+                (switch path count       )
+                (case 1 place next square)  // on PlacePath method.
+                (case 2-3 random         )
+                (case 4 place prev square)
             }
-            onbrake = true
+            onBrake = true;
         }
         else
         {
             random length
 
             place path on all down
+            onBrake = false;
         }
 
          */
