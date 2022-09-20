@@ -30,12 +30,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private bool[] pathwayStructure3 = new bool[4]; // single down
     [SerializeField] private bool[] pathwayStructure4 = new bool[4]; // double up
     [SerializeField] private bool[] pathwayStructure5 = new bool[4]; // double down
-                                                                     //(bool array of 4 units 2 upp 2 down)
-
-    void Start()
-    {
-        
-    }
+    //(bool array of 4 units 2 upp 2 down)
 
     void Update()
     {
@@ -45,7 +40,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    void PlacePathway()
+    void PlacePathway ()
     {
         /*
         
@@ -53,7 +48,7 @@ public class LevelManager : MonoBehaviour
         {
             hasPlacedDown = false;
             
-            pathLength = /random.range pathLengthMax pathLengthMin
+            pathLength = Random.Range(pathLengthMax, pathLengthMin);
 
             for(int i = 0; i < pahts.count; i++)
             {
@@ -118,71 +113,82 @@ public class LevelManager : MonoBehaviour
 
     void PlacePath(bool[] pathwayStructure, int row)
     {
+        
         /* 
         //Todo Maby make this a switch statement.
         if(pathwayStructure[0])
         {
-           activePathwayUp[row] = true;
+            activePathwayUp[row] = true;
         }
         if(pathwayStructure[2])
         {
-           activePathwayDown[row] = true;
-           hasPlacedDown = true;
+            activePathwayDown[row] = true;
+            hasPlacedDown = true;
         }
         if(pathwayStructure[1])
         {
-           switch row  //Todo all here
-           case1
-           upp 1 = true
-           case2
-           if(random.range 1 2 == 1)
-           {
-              upp 0 = true
-           }
-           else
-           {
-              upp 2 = true
-           }
-           case3
-           if(random.range 1 2 == 1)
-           {
-              upp 1 = true
-           }
-           else
-           {
-              upp 3 = true
-           }
-           case4
-           upp 2 = true
+            switch (row)
+            {
+                case 1:
+                    activePathwayUp[1] = true;
+                    break;
+                case 2:
+                    if(Random.Range(1,2) == 1)
+                    {
+                        activePathwayUp[0] = true;
+                    }
+                    else
+                    {
+                        activePathwayUp[2] = true;
+                    }
+                    break;
+                case 3:
+                    if(Random.Range(1,2) == 1)
+                    {
+                        activePathwayUp[1] = true;
+                    }
+                    else
+                    {
+                        activePathwayUp[3] = true;
+                    }
+                    break;
+                case 4:
+                    activePathwayUp[2] = true;
+                    break;
+            }
         }
-
         if(pathwayStructure[3])
         {
-           switch row     //Todo all here
-           case1
-           down 1 = true
-           case2
-           if(random.range 1 2 == 1)
-           {
-              down 0 = true
-           }
-           else
-           {
-              down 2 = true
-           }
-           case3
-           if(random.range 1 2 == 1)
-           {
-              down 1 = true
-           }
-           else
-           {
-              down 3 = true
-           }
-           case4
-           down 2 = true
-
-           hasPlacedDown = true
+            switch (row)
+            {
+                case 1:
+                    activePathwayDown[1] = true;
+                    break;
+                case 2:
+                    if(Random.Range(1,2) == 1)
+                    {
+                        activePathwayDown[0] = true;
+                    }
+                    else
+                    {
+                        activePathwayDown[2] = true;
+                    }
+                    break;
+                case 3:
+                    if(Random.Range(1,2) == 1)
+                    {
+                        activePathwayDown[1] = true;
+                    }
+                    else
+                    {
+                        activePathwayDown[3] = true;
+                    }
+                    break;
+                case 4:
+                    activePathwayDown[2] = true;
+                    break;
+            }
+            hasPlacedDown = true
         }
         */
     }
