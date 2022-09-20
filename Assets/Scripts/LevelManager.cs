@@ -31,7 +31,6 @@ public class LevelManager : MonoBehaviour
 
         private bool onBrake = false;
         private bool hasPlacedDown = false;
-        //Todo (on place down = true)
 
         [Serializefield] private float pathLengthMax = 1f;
         [Serializefield] private float pathLengthMin = 1f;
@@ -53,57 +52,122 @@ public class LevelManager : MonoBehaviour
 
         if(!onBrake)
         {
+            hasPlacedDown = false;
+            
             pathLength = /random.range pathLengthMax pathLengthMin
 
             for(int i = 0; i < pahts.count; i++)
             {
                 if(/random.range 1 placeChance == 1)
                 {
-                    Switch random.range 1 5
+                    /Switch random.range 1 5
                     case1
-                    PlacePath(pathwayStructure1);
+                    PlacePath(pathwayStructure1, i);
                     case2
-                    PlacePath(pathwayStructure2);
+                    PlacePath(pathwayStructure2, i);
                     case3
-                    PlacePath(pathwayStructure3);
+                    PlacePath(pathwayStructure3, i);
                     case4
-                    PlacePath(pathwayStructure4);
+                    PlacePath(pathwayStructure4, i);
                     case5
-                    PlacePath(pathwayStructure5);
-
-                    (if 4/5                  )
-                    (switch path count       )
-                    (case 1 place next square)  // on PlacePath method.
-                    (case 2-3 random         )
-                    (case 4 place prev square)
+                    PlacePath(pathwayStructure5, i);
                 }
             }
             if(!has placed down)
             {
-                Switch random.range 1 3
-                case1
-                PlacePath(pathwayStructure1);
-                case2
-                PlacePath(pathwayStructure3);
-                case3
-                PlacePath(pathwayStructure5);
+                int row = random.range 0 3;
 
-                (if 3                    )
-                (switch path count       )
-                (case 1 place next square)  // on PlacePath method.
-                (case 2-3 random         )
-                (case 4 place prev square)
+                /Switch random.range 1 3
+                case1
+                PlacePath(pathwayStructure1, row);
+                case2
+                PlacePath(pathwayStructure3, row);
+                case3
+                PlacePath(pathwayStructure5, row);
             }
             onBrake = true;
         }
         else
         {
-            random length
+            pathLength = /random.range pauseLengthMax pauseLengthMin
 
-            place path on all down
+            for(int i = 0; i < path.count; i++)
+            {
+                activePathwayDown[i] = true;
+            }
+
             onBrake = false;
         }
 
          */
+    }
+
+    void PlacePath(bool[] pathwayStructure, int row)
+    {
+        /* 
+        if(0)
+        {
+           upp 0+(row) = true
+        }
+        if(2)
+        {
+           down 0+(row) = true
+           hasPlacedDown = true
+        }
+        if(1)
+        {
+           switch row
+           case1
+           upp 1 = true
+           case2
+           if(random.range 1 2 == 1)
+           {
+              upp 0 = true
+           }
+           else
+           {
+              upp 2 = true
+           }
+           case3
+           if(random.range 1 2 == 1)
+           {
+              upp 1 = true
+           }
+           else
+           {
+              upp 3 = true
+           }
+           case4
+           upp 2 = true
+        }
+        if(3)
+        {
+           switch row
+           case1
+           down 1 = true
+           case2
+           if(random.range 1 2 == 1)
+           {
+              down 0 = true
+           }
+           else
+           {
+              down 2 = true
+           }
+           case3
+           if(random.range 1 2 == 1)
+           {
+              down 1 = true
+           }
+           else
+           {
+              down 3 = true
+           }
+           case4
+           down 2 = true
+
+           hasPlacedDown = true
+        }
+        */
     }
 }
