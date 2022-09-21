@@ -40,9 +40,11 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+
+
     void PlacePathway ()
     {
-        /*
+        /* +
         
         if(!onBrake)
         {
