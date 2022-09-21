@@ -223,6 +223,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe944b7fe49a4cf8be6049fed20611b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lanes:
+  - 0
+  - 0
+  - 0
+  - 0
   moveSpeed: 5
   speedAccelerator: 2
   speedDecelerator: 0.5
@@ -835,6 +840,16 @@ MonoBehaviour:
   - {fileID: 729064801}
   - {fileID: 1213364695}
   levelSpeed: 4
+  pathLengthMax: 10
+  pathLengthMin: 4
+  pauseLengthMax: 6
+  pauseLengthMin: 2
+  placeChance: 2
+  pathwayStructure1: 01000100
+  pathwayStructure2: 01000000
+  pathwayStructure3: 00000100
+  pathwayStructure4: 01010000
+  pathwayStructure5: 00000101
 --- !u!4 &888193223
 Transform:
   m_ObjectHideFlags: 0

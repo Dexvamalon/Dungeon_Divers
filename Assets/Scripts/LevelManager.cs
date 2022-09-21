@@ -32,19 +32,39 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private bool[] pathwayStructure5 = new bool[4]; // double down
     //(bool array of 4 units 2 upp 2 down)
 
+    private float[] paths = new float[4];
+
+    private void Start()
+    {
+        paths = FindObjectOfType<PlayerMovement>().lanes;
+    }
+
     void Update()
     {
         for(int i = 0; i < obstacles.Count; i++)
         {
             obstacles[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
         }
+
+        /*
+        var
+        Vector 3
+        // position of all the obstacles in segment, empty game object with the obstacles within.
+
+        code
+        calculate end of path
+        {
+        pos of path + length/2
+        }
+        if < certain number over screen
+        place new path
+        */
     }
 
 
 
-    void PlacePathway ()
+    void PlacePathway()
     {
-        /* +
         
         if(!onBrake)
         {
@@ -52,11 +72,11 @@ public class LevelManager : MonoBehaviour
             
             pathLength = Random.Range(pathLengthMax, pathLengthMin);
 
-            for(int i = 0; i < pahts.count; i++)
+            for(int i = 0; i < paths.Length; i++)
             {
                 if(Random.Range(1, placeChance) == 1)
                 {
-                    Switch (Random.Range(1, 5))
+                    switch (Random.Range(1, 5))
                     {
                         case 1:
                             PlacePath(pathwayStructure1, i);
@@ -82,7 +102,7 @@ public class LevelManager : MonoBehaviour
             {
                 int row = Random.Range(0, 3);
 
-                Switch (Random.Range(1, 3))
+                switch (Random.Range(1, 3))
                 {
                     case 1:
                         PlacePath(pathwayStructure1, row);
@@ -103,21 +123,18 @@ public class LevelManager : MonoBehaviour
         {
             pathLength = Random.Range(pauseLengthMax, pauseLengthMin);
 
-            for(int i = 0; i < path.count; i++)
+            for(int i = 0; i < paths.Length; i++)
             {
                 activePathwayDown[i] = true;
             }
 
             onBrake = false;
         }
-         */
     }
 
     void PlacePath(bool[] pathwayStructure, int row)
     {
         
-        /* 
-        //Todo Maby make this a switch statement.
         if(pathwayStructure[0])
         {
             activePathwayUp[row] = true;
@@ -190,8 +207,7 @@ public class LevelManager : MonoBehaviour
                     activePathwayDown[2] = true;
                     break;
             }
-            hasPlacedDown = true
+            hasPlacedDown = true;
         }
-        */
     }
 }

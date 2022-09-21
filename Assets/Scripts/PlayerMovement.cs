@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Lanes")]
-    private float[] lanes = new float[4];
+    public float[] lanes = new float[4];
 
     [Header("Input")]
     private bool[] pressedButtons = new bool[4];
