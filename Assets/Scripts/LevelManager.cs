@@ -34,6 +34,10 @@ public class LevelManager : MonoBehaviour
 
     private float[] paths = new float[4];
 
+    private Transform obstacleParent;
+    // postion of the end of a segment, empty game object with the obstacles within, 
+    [SerializeField] private float placePos = 10f;
+
     private void Start()
     {
         paths = FindObjectOfType<PlayerMovement>().lanes;
@@ -46,19 +50,15 @@ public class LevelManager : MonoBehaviour
             obstacles[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
         }
 
-        /*
-        var
-        Vector 3
-        // position of all the obstacles in segment, empty game object with the obstacles within.
-
-        code
-        calculate end of path
+        if(obstacleParent == null)
         {
-        pos of path + length/2
+            PlacePathway();
+            obstacleParent = transform; //remove later, for degbugging.
         }
-        if < certain number over screen
-        place new path
-        */
+        /*else if(obstacleParent.position.y < placePos)
+        {
+            PlacePathway();
+        }*/
     }
 
 
@@ -74,9 +74,9 @@ public class LevelManager : MonoBehaviour
 
             for(int i = 0; i < paths.Length; i++)
             {
-                if(Random.Range(1, placeChance) == 1)
+                if(Random.Range(0, placeChance) <= 1)
                 {
-                    switch (Random.Range(1, 5))
+                    switch (Random.Range(1, 6))
                     {
                         case 1:
                             PlacePath(pathwayStructure1, i);
@@ -97,12 +97,14 @@ public class LevelManager : MonoBehaviour
                             break;
                     }
                 }
+                Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
+                Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
             }
             if(!hasPlacedDown)
             {
-                int row = Random.Range(0, 3);
+                int row = Random.Range(0, 4);
 
-                switch (Random.Range(1, 3))
+                switch (Random.Range(1, 4))
                 {
                     case 1:
                         PlacePath(pathwayStructure1, row);
@@ -130,7 +132,13 @@ public class LevelManager : MonoBehaviour
 
             onBrake = false;
         }
+
+        Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
+        Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
+
+        //todo place obstacles
     }
+
 
     void PlacePath(bool[] pathwayStructure, int row)
     {
@@ -138,21 +146,23 @@ public class LevelManager : MonoBehaviour
         if(pathwayStructure[0])
         {
             activePathwayUp[row] = true;
+            Debug.Log("0");
         }
         if(pathwayStructure[2])
         {
             activePathwayDown[row] = true;
             hasPlacedDown = true;
+            Debug.Log("2");
         }
         if(pathwayStructure[1])
         {
             switch (row)
             {
-                case 1:
+                case 0:
                     activePathwayUp[1] = true;
                     break;
-                case 2:
-                    if(Random.Range(1,2) == 1)
+                case 1:
+                    if(Random.Range(1,3) == 1)
                     {
                         activePathwayUp[0] = true;
                     }
@@ -161,8 +171,8 @@ public class LevelManager : MonoBehaviour
                         activePathwayUp[2] = true;
                     }
                     break;
-                case 3:
-                    if(Random.Range(1,2) == 1)
+                case 2:
+                    if(Random.Range(1,3) == 1)
                     {
                         activePathwayUp[1] = true;
                     }
@@ -171,20 +181,21 @@ public class LevelManager : MonoBehaviour
                         activePathwayUp[3] = true;
                     }
                     break;
-                case 4:
+                case 3:
                     activePathwayUp[2] = true;
                     break;
             }
+            Debug.Log("1");
         }
         if(pathwayStructure[3])
         {
             switch (row)
             {
-                case 1:
+                case 0:
                     activePathwayDown[1] = true;
                     break;
-                case 2:
-                    if(Random.Range(1,2) == 1)
+                case 1:
+                    if(Random.Range(1,3) == 1)
                     {
                         activePathwayDown[0] = true;
                     }
@@ -193,8 +204,8 @@ public class LevelManager : MonoBehaviour
                         activePathwayDown[2] = true;
                     }
                     break;
-                case 3:
-                    if(Random.Range(1,2) == 1)
+                case 2:
+                    if(Random.Range(1,3) == 1)
                     {
                         activePathwayDown[1] = true;
                     }
@@ -203,11 +214,12 @@ public class LevelManager : MonoBehaviour
                         activePathwayDown[3] = true;
                     }
                     break;
-                case 4:
+                case 3:
                     activePathwayDown[2] = true;
                     break;
             }
             hasPlacedDown = true;
+            Debug.Log("3");
         }
     }
 }
