@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class LevelManager : MonoBehaviour
     //(bool array of 4 units 2 upp 2 down)
 
     private float[] paths = new float[4];
+
+    private List<List<GameObject>> listsOfLists = new List<List<GameObject>>();
 
     private Transform obstacleParent;
     // postion of the end of a segment, empty game object with the obstacles within, 
@@ -136,7 +139,45 @@ public class LevelManager : MonoBehaviour
         Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
         Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
 
-        //todo place obstacles
+        PlaceObstacles();
+    }
+
+
+    void PlaceObstacles()
+    {
+        /*
+
+        FindWorkingBastacles();
+
+        place them
+        pick random of the available ones
+        place the obsticle at a random working position
+
+        pick random other that would work
+        if overlap
+        check if there is space left
+        if is place at random working place
+        else remove obsticle from list
+        try again x times
+
+        */
+    }
+
+    //private List<bool[]> obstacleBlockVariants = new List<bool[]>(); //move up later
+    //private List<GameObject> prefabVariants = new List<GameObject>(); //move up later
+    //private List<GameObject> pregabObstacles = new List<GameObject>();
+
+    void FindWorkingObstacles()
+    {
+        /*
+        private List<bool[]> obsticleVariantBlock = new List<bool[]>();
+        private List<GameObject> prefabVariants = new List<GameObject>();
+        create lists
+        go throgh prefabs and add stuff to the 2 lists above.  // make method to return the variables in the prefab
+
+
+
+        */
     }
 
 
@@ -146,13 +187,11 @@ public class LevelManager : MonoBehaviour
         if(pathwayStructure[0])
         {
             activePathwayUp[row] = true;
-            Debug.Log("0");
         }
         if(pathwayStructure[2])
         {
             activePathwayDown[row] = true;
             hasPlacedDown = true;
-            Debug.Log("2");
         }
         if(pathwayStructure[1])
         {
@@ -185,7 +224,6 @@ public class LevelManager : MonoBehaviour
                     activePathwayUp[2] = true;
                     break;
             }
-            Debug.Log("1");
         }
         if(pathwayStructure[3])
         {
@@ -219,7 +257,6 @@ public class LevelManager : MonoBehaviour
                     break;
             }
             hasPlacedDown = true;
-            Debug.Log("3");
         }
     }
 }
