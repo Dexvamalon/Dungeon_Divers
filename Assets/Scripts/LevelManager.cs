@@ -171,9 +171,14 @@ public class LevelManager : MonoBehaviour
     {
         /*
         private List<bool[]> obsticleVariantBlock = new List<bool[]>();
-        private List<GameObject> prefabVariants = new List<GameObject>();
+        private List<GameObject> prefabVariants = new List<GameObject>(); // make sure to place items in the right order // not yet decided
+        private List<GameObject> temporaryPrefabVariants = new List<GameObject>();
         create lists
-        go throgh prefabs and add stuff to the 2 lists above.  // make method to return the variables in the prefab
+        /temproaryPrefabVariants = prefabVariants;
+        for(int i = 0; i < prefabVariants.Lenght; i++)
+        {
+            /obsticleVariantBlock = prefabVariants[i].GetBlockVariants();
+        }
 
 
 
