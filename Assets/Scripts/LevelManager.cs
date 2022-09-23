@@ -35,8 +35,14 @@ public class LevelManager : MonoBehaviour
 
     private float[] paths = new float[4];
 
+    [Header("Obstacle List Variables")]
     private List<List<GameObject>> listsOfLists = new List<List<GameObject>>();
+    private List<bool[]> obstacleVariantBlock = new List<bool[]>();
+    [SerializeField] private List<GameObject> prefabs = new List<GameObject>(); // make sure to place items in the right order // not yet decided
+    private List<GameObject> temporaryPrefabVariants = new List<GameObject>();
+    private List<float> temporaryPrefabLength = new List<float>();
 
+    private List<Transform> obstacleParentsList = new List<Transform>();
     private Transform obstacleParent;
     // postion of the end of a segment, empty game object with the obstacles within, 
     [SerializeField] private float placePos = 10f;
@@ -44,6 +50,10 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         paths = FindObjectOfType<PlayerMovement>().lanes;
+        /*obstacleParent = new GameObject("Obstacle parent").transform;
+        obstacleParentsList.Add(obstacleParent);
+        Instantiate(prefabs[1], new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
+        */
     }
 
     void Update()
@@ -140,20 +150,29 @@ public class LevelManager : MonoBehaviour
         Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
 
         PlaceObstacles();
+        FindWorkingObstacles(); // remove later
     }
 
 
     void PlaceObstacles()
     {
         /*
+        //might need to change code
 
-        FindWorkingBastacles();
+        FindWorkingObstacles();
 
-        place them
+        place them*
         pick random of the available ones
+        int i = Random.Range(0, temporaryPrefabVariants.Cout)
+        
+        obstacleParent = new GameObject("Obstacle parent").transform;
+        obstacleParentsList.Add(obstacleParent);
+        Instantiate(temporaryPrefabVariants[i], new Vector3(temporaryPrefabVariants[i].GetComponent<Info>()+ y + z).GetBlockPosition(), Quaternion.Euler(0, 0, 0), obstacleParent.transform); // fix y and z
+        
         place the obsticle at a random working position
+        // 
 
-        pick random other that would work
+        pick random other that would work*
         if overlap
         check if there is space left
         if is place at random working place
@@ -163,26 +182,67 @@ public class LevelManager : MonoBehaviour
         */
     }
 
-    //private List<bool[]> obstacleBlockVariants = new List<bool[]>(); //move up later
-    //private List<GameObject> prefabVariants = new List<GameObject>(); //move up later
-    //private List<GameObject> pregabObstacles = new List<GameObject>();
-
     void FindWorkingObstacles()
     {
-        /*
-        private List<bool[]> obsticleVariantBlock = new List<bool[]>();
-        private List<GameObject> prefabVariants = new List<GameObject>(); // make sure to place items in the right order // not yet decided
-        private List<GameObject> temporaryPrefabVariants = new List<GameObject>();
-        create lists
-        /temproaryPrefabVariants = prefabVariants;
-        for(int i = 0; i < prefabVariants.Lenght; i++)
+        for(int i = 0; i < prefabs.Count; i++)
         {
-            /obsticleVariantBlock = prefabVariants[i].GetBlockVariants();
+            obstacleVariantBlock.Add(prefabs[i].GetComponent<Info>().GetObstacleBlock());
+            temporaryPrefabLength.Add(prefabs[i].GetComponent<Info>().GetLenght());
+            temporaryPrefabVariants.Add(prefabs[i]);
         }
 
+        for(int i = 0; i < temporaryPrefabVariants.Count; i++)
+        {
+            if(temporaryPrefabLength[i] > pathLength)
+            {
+                temporaryPrefabVariants.RemoveAt(i);
+                obstacleVariantBlock.RemoveAt(i);
+                temporaryPrefabLength.RemoveAt(i);
+            }
+        }
 
+        for(int i = 0; i < activePathwayUp.Length; i++)
+        {
+            if(activePathwayUp[i])
+            {
+                for(int x = 0; x < obstacleVariantBlock.Count; x++)
+                {
+                    if(obstacleVariantBlock[x][i]) //same i as in the first for loop
+                    {
+                        obstacleVariantBlock.RemoveAt(x);
+                        temporaryPrefabVariants.RemoveAt(x);
+                        temporaryPrefabLength.RemoveAt(x);
+                    }
+                }
+            }
+        }
 
-        */
+        for (int i = 0; i < activePathwayDown.Length; i++)
+        {
+            if(activePathwayDown[i])
+            {
+                for(int x = 0; x < obstacleVariantBlock.Count; x++)
+                {
+                    if(obstacleVariantBlock[x][i+4]) //same i as in the first for loop
+                    {
+                        obstacleVariantBlock.RemoveAt(x);
+                        temporaryPrefabVariants.RemoveAt(x);
+                        temporaryPrefabLength.RemoveAt(x);
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < obstacleVariantBlock.Count; i++)
+        {
+            Debug.Log("i" + obstacleVariantBlock[i][0] + " " +
+                      obstacleVariantBlock[i][1] + " " +
+                      obstacleVariantBlock[i][2] + " " +
+                      obstacleVariantBlock[i][3] + " " +
+                      obstacleVariantBlock[i][4] + " " +
+                      obstacleVariantBlock[i][5] + " " +
+                      obstacleVariantBlock[i][6] + " " +
+                      obstacleVariantBlock[i][7]);
+        }
     }
 
 

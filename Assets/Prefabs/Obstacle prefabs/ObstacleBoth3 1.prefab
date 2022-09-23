@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7524944315610414779}
   - component: {fileID: 1847838266873428650}
   m_Layer: 7
-  m_Name: ObstacleBoth3
+  m_Name: ObstacleBoth3 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,11 +143,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd11cd0169224c7294f34ae35e5dc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockVariant1: 0101010001010100
-  blockVariant2: 0001010100010101
-  blockVariant3: 0000000000000000
-  blockVariant4: 0000000000000000
-  blockVariantAmount: 2
-  blockPositions:
-  - -1.1
-  - 1.1
+  obstacleblock: 0101010001010100
+  blockPosition: -1.1

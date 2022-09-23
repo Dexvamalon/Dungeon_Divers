@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class Info : MonoBehaviour
 {
-    private float lenght = 1f;
+    private float length = 1f;
     [Header("blockVariants")]
-    [SerializeField] private bool[] blockVariant1 = new bool[8];
-    [SerializeField] private bool[] blockVariant2 = new bool[8];
-    [SerializeField] private bool[] blockVariant3 = new bool[8];
-    [SerializeField] private bool[] blockVariant4 = new bool[8];
-    [SerializeField] private int blockVariantAmount = 1;
-    [SerializeField] private List<float> blockPositions = new List<float>();
+    [SerializeField] private bool[] obstacleblock = new bool[8];
+    [SerializeField] private float blockPosition = 0f;
 
-    public void GetBlockVariants(List<bool[]> obsticleVariants)
+    public float GetLenght()
     {
-        List<bool[]> temporaryList = new List<bool[]> { blockVariant1, blockVariant2, blockVariant3, blockVariant4 };
+        return length;
+    }
 
-        for(int i = 0; i < blockVariantAmount; i++)
-        {
-            obsticleVariants.Add(temporaryList[i]);
-        }
+    public bool[] GetObstacleBlock()
+    {
+        return obstacleblock;
+    }
+
+    public float GetBlockPosition()
+    {
+        return blockPosition;
     }
 }

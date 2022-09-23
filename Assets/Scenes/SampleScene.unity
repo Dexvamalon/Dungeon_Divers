@@ -600,6 +600,16 @@ MonoBehaviour:
   pathwayStructure3: 00000100
   pathwayStructure4: 01010000
   pathwayStructure5: 00000101
+  prefabs:
+  - {fileID: 2111364889000857542, guid: ebb48c42c38f743e88746f48f125df7b, type: 3}
+  - {fileID: 2111364889000857542, guid: fabc3b09319374b628092ca443498c99, type: 3}
+  - {fileID: 2111364889000857542, guid: 7bb783911e2bb4d949b5b96ed048967e, type: 3}
+  - {fileID: 2111364889000857542, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
+  - {fileID: 1156601567149898045, guid: d30acf5fc21f841688f925d11d775b29, type: 3}
+  - {fileID: 1156601567149898045, guid: 5d6f94bd3f8b448afafd9bb0a5ec5cfc, type: 3}
+  - {fileID: 1156601567149898045, guid: d24725d02717c47909a9a7ce0a1f5beb, type: 3}
+  - {fileID: 7524944315610414780, guid: 8ccfac61c20064d328e0ed706b84445e, type: 3}
+  - {fileID: 7524944315610414780, guid: 9fee329ea7d2d4cf5949792fb5cf83a4, type: 3}
   placePos: 10
 --- !u!4 &888193223
 Transform:
@@ -982,7 +992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2111364889000857594, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 2111364889000857594, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
       propertyPath: m_LocalPosition.y
