@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     [Header("Pathway variables")]
     private bool[] activePathwayUp = new bool[4];
     private bool[] activePathwayDown = new bool[4];
+    private bool[] obscuredPath = new bool[8];
 
     private bool onBrake = false;
     private bool hasPlacedDown = false;
@@ -153,31 +154,123 @@ public class LevelManager : MonoBehaviour
         FindWorkingObstacles(); // remove later
     }
 
-
     void PlaceObstacles()
     {
         /*
-        //might need to change code
 
         FindWorkingObstacles();
 
-        place them*
+        float yPos;
+        bool colliding = false;
+        bool collidingy = false;
+
+        //place them
         pick random of the available ones
-        int i = Random.Range(0, temporaryPrefabVariants.Cout)
+        int x = Random.Range(0, temporaryPrefabVariants.Count)
         
+
+        yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2, 
+                            obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
         obstacleParent = new GameObject("Obstacle parent").transform;
         obstacleParentsList.Add(obstacleParent);
-        Instantiate(temporaryPrefabVariants[i], new Vector3(temporaryPrefabVariants[i].GetComponent<Info>()+ y + z).GetBlockPosition(), Quaternion.Euler(0, 0, 0), obstacleParent.transform); // fix y and z
+        Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
         
-        place the obsticle at a random working position
+        for(obscuredPath.Lenght)
+        {
+            if(obstacleVariantBlock[x][i] == true)
+            {
+                obscuredPath[i] = true
+            }
+        }
+
+        temporaryPrefabVariants.RemoveAt(x);
+        obstacleVariantBlock.RemoveAt(x);
+        temporaryPrefabLength.RemoveAt(x);
         // 
 
-        pick random other that would work*
-        if overlap
-        check if there is space left
-        if is place at random working place
-        else remove obsticle from list
-        try again x times
+        //pick random other that would work
+        x = Random.Range(0, temporaryPrefabVariants.Count)
+        for(obscuredPath.Length)
+        {
+            if(obstacleVariantBlock[x][i] == true && obscuredPath[i] == true)
+            {
+                colliding = true;
+            }
+        }
+
+        if(colliding)
+        {
+
+        //todo instead of this add a function that determines the working spaces every time a obsticle is placed.
+        /////////////////////////////////// Might not do
+
+            list[] starts = new list[8] // list of starts of placed obstacles sorted by their lanes
+            list[] ends = new list[8]   // list of ends of placed obstacles sorted by their lanes
+            list<float> rellevant starts = new List<float> // list of starts that will affect current obstacle that is being placed
+            list<float> rellevant ends = new List<float>   // list of ends that will affect current obstacle that is being placed
+            
+
+            for(starts)
+            {
+                if(obstacleVariantBlock[x][i] == true && obscuredPath[i] == true)
+                {
+                    rellevantStarts.Add(starts[i])
+                    rellevantStarts.Add(End of pathway)
+                    rellevantEnds.Add(ends[i])
+                    rellevantStarts.Add(Start of pathway)
+                }
+            }
+
+            go throgh rellevant starts and ends, remove the ones that make up a smaller space than the length of the obstacle
+
+            float smallest start
+            float smallest end
+
+            for(rellevant starts)
+            {
+                for(rellevat starts)
+                {
+                    if(j = 0)
+                    smallest starts = rellevant starts[i]
+                    if(rellevant starts[i] < smallest start)
+                    smallest starts = rellevant starts[i]
+                }
+                for(rellevat ends)
+                {
+                    if(j = 0)
+                    smallest ends = rellevant ends[i]
+                    if(rellevant ends[i] < smallest ends)
+                    smallest ends = rellevant ends[i]
+                }
+
+                if(smallest start - smallest end > length of obstacle)
+                {
+                    collidingy = 
+                }
+
+        ///////////////////////// Might not do
+                
+            }
+
+            if there is space left (y)
+            {
+                place at random working place
+            }
+            else
+            {
+                remove obsticle from list
+            }
+        }
+        else
+        {
+            place at random working place
+        }
+
+        //if overlap space (x)
+        //check if there is space left (y)
+        //if is place at random working place
+        //else remove obsticle from list
+        //try again x times
 
         */
     }
