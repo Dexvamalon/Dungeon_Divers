@@ -174,10 +174,12 @@ public class LevelManager : MonoBehaviour
         obstacleParent = new GameObject("Obstacle parent").transform;
         obstacleParentsList.Add(obstacleParent);
         Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
-        
+
+        FindAvilableYSpace(yPos - temporaryPrefabVariants[x].transform.lossyScale.y / 2, yPos + temporaryPrefabVariants[x].transform.lossyScale.y / 2, x)
+
         for(obscuredPath.Lenght)
         {
-            if(obstacleVariantBlock[x][i] == true)
+            if(obstacleVariantBlock[x][i])
             {
                 obscuredPath[i] = true
             }
@@ -192,65 +194,51 @@ public class LevelManager : MonoBehaviour
         x = Random.Range(0, temporaryPrefabVariants.Count)
         for(obscuredPath.Length)
         {
-            if(obstacleVariantBlock[x][i] == true && obscuredPath[i] == true)
+            if(obstacleVariantBlock[x][i] && obscuredPath[i])
             {
                 colliding = true;
             }
         }
 
+        List<int> curObstacleBlock = new List<int>;
+
         if(colliding)
         {
+        //todo fix up here
+        var
+        array of lists (working ends)
+        array of lists (working starts)
 
-        //todo instead of this add a function that determines the working spaces every time a obsticle is placed.
-        /////////////////////////////////// Might not do
+        for(starts)
+        {
+        if (obstacleVariantBlock[x][i])
+        {
+        curObstacleBlock.Add(i)
 
-            list[] starts = new list[8] // list of starts of placed obstacles sorted by their lanes
-            list[] ends = new list[8]   // list of ends of placed obstacles sorted by their lanes
-            list<float> rellevant starts = new List<float> // list of starts that will affect current obstacle that is being placed
-            list<float> rellevant ends = new List<float>   // list of ends that will affect current obstacle that is being placed
-            
+        for(ends[i])
+        {
+        if ends[i][j] - starts[i][j] < length of obstacle
+        {
+        working ends[i].Add(ends[i][j])
+        working starts[i].Add(starts[i][j])
+        }
+        }
+        }
+        for(curObstacleBlock)
+        {
+        check for the smallest start in all lists
+        check the free space in the first list against the two others
+        if both start and end is withing the first lists free space
+        in a new list add the end and start.
+        if only start is within the first lists free space
+        in the new list add start of first list and end of comparing list // same for end
+        if neither is within the first lists free space
 
-            for(starts)
-            {
-                if(obstacleVariantBlock[x][i] == true && obscuredPath[i] == true)
-                {
-                    rellevantStarts.Add(starts[i])
-                    rellevantStarts.Add(End of pathway)
-                    rellevantEnds.Add(ends[i])
-                    rellevantStarts.Add(Start of pathway)
-                }
-            }
+        }
+        }
 
-            go throgh rellevant starts and ends, remove the ones that make up a smaller space than the length of the obstacle
+        //todo to here
 
-            float smallest start
-            float smallest end
-
-            for(rellevant starts)
-            {
-                for(rellevat starts)
-                {
-                    if(j = 0)
-                    smallest starts = rellevant starts[i]
-                    if(rellevant starts[i] < smallest start)
-                    smallest starts = rellevant starts[i]
-                }
-                for(rellevat ends)
-                {
-                    if(j = 0)
-                    smallest ends = rellevant ends[i]
-                    if(rellevant ends[i] < smallest ends)
-                    smallest ends = rellevant ends[i]
-                }
-
-                if(smallest start - smallest end > length of obstacle)
-                {
-                    collidingy = 
-                }
-
-        ///////////////////////// Might not do
-                
-            }
 
             if there is space left (y)
             {
@@ -271,6 +259,72 @@ public class LevelManager : MonoBehaviour
         //if is place at random working place
         //else remove obsticle from list
         //try again x times
+
+        */
+    }
+
+    void FindAvilableYSpace(float newObstacleStart, float newObstacleEnd, bool x)
+    {
+        /*
+
+        var
+        //array of lists (ends)
+        //array of lists (starts)
+        List<float>[] starts = new List<float>[8];
+        List<float>[] ends = new List<float>[8];
+        bool[] working space = new bool[8];
+
+        int var;
+
+
+        Set to default (when starting to place a new pathway)
+
+        for(ends)
+        if(obsticleVariantBlock[x][j])
+        {
+
+        ////fixing arrays
+        //fing biggest ends thats smaller than new obstacle start
+
+        for(ends[j])
+        if i = 0
+        var = i
+        else if (ends[j][i] > ends[j][var] && ends[j][i] <= new obstacle start)
+        var = i
+
+        //if end of same index > new obstacle start
+        //end = new obstacle start
+
+        if starts[j][var] >= new obstacle start
+        ends[j].Add(ends[j][var])
+        starts[j].Add(ends[j][var])
+        starts[j][var] = new obstacle start
+
+
+        //find smallest starts thats bigger than new obstacle end
+
+        for(starts[j])
+        if i = 0
+        var = i
+        else if (starts[j][i] < starts[j][var] && starts[j][i] >= new obstacle end)
+        var = i
+
+        //if star of same index < new obstacle end
+        //start = new obstacle end
+
+        if ends[j][var] >= new obstacle end
+        ends[j].Add(ends[j][var])
+        starts[j].Add(ends[j][var])
+        ends[j][var] = new obstacle end
+
+
+        for(ends[j])
+        if ends[j][i] > new obstacle start && < new obstacle end && starts[j][i] > new obstacle start && < new obstacle end
+        ends[j].removeAt(i)
+        starts[j].removeAt(i)
+
+        }
+
 
         */
     }
