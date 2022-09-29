@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,7 +38,6 @@ public class LevelManager : MonoBehaviour
     private float[] paths = new float[4];
 
     [Header("Obstacle List Variables")]
-    private List<List<GameObject>> listsOfLists = new List<List<GameObject>>();
     private List<bool[]> obstacleVariantBlock = new List<bool[]>();
     [SerializeField] private List<GameObject> prefabs = new List<GameObject>(); // make sure to place items in the right order // not yet decided
     private List<GameObject> temporaryPrefabVariants = new List<GameObject>();
@@ -47,6 +47,13 @@ public class LevelManager : MonoBehaviour
     private Transform obstacleParent;
     // postion of the end of a segment, empty game object with the obstacles within, 
     [SerializeField] private float placePos = 10f;
+
+
+    private List<float>[] starts = new List<float>[8];
+    private List<float>[] ends = new List<float>[8];
+
+
+
 
     private void Start()
     {
@@ -67,12 +74,11 @@ public class LevelManager : MonoBehaviour
         if(obstacleParent == null)
         {
             PlacePathway();
-            obstacleParent = transform; //remove later, for degbugging.
         }
-        /*else if(obstacleParent.position.y < placePos)
+        else if(obstacleParent.position.y < placePos)
         {
             PlacePathway();
-        }*/
+        }
     }
 
 
@@ -154,34 +160,43 @@ public class LevelManager : MonoBehaviour
         FindWorkingObstacles(); // remove later
     }
 
-    void PlaceObstacles()
+    void PlaceObstacles() //todo debug
     {
-        /*
+        List<int> curObstacleBlock = new List<int>();
 
-        FindWorkingObstacles();
+        List<float>[] workingEnds = new List<float>[8];    //array of lists (working ends)
+        List<float>[] workingStarts = new List<float>[8];  //array of lists (working starts)
+        List<float> usedStarts = new List<float>();   //list (used starts)
+        List<float> usedEnds = new List<float>();    //list(used ends)
+        List<float> temporaryStarts = new List<float>();    //list(temporary starts)
+        List<float> temporaryEnds = new List<float>();
 
         float yPos;
         bool colliding = false;
-        bool collidingy = false;
+
+        FindWorkingObstacles();
 
         //place them
-        pick random of the available ones
-        int x = Random.Range(0, temporaryPrefabVariants.Count)
-        
+        //pick random of the available ones
+        int x = Random.Range(0, temporaryPrefabVariants.Count);
 
+
+        obstacleParent = new GameObject("Obstacle parent").transform;
+        obstacleParent.position = new Vector3(0, placePos + pathLength, 0);
+        obstacleParentsList.Add(obstacleParent);
+        Debug.Log(x);
         yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2, 
                             obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
-        obstacleParent = new GameObject("Obstacle parent").transform;
-        obstacleParentsList.Add(obstacleParent);
+        
         Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
 
-        FindAvilableYSpace(yPos - temporaryPrefabVariants[x].transform.lossyScale.y / 2, yPos + temporaryPrefabVariants[x].transform.lossyScale.y / 2, x)
+        FindAvilableYSpace(yPos - temporaryPrefabVariants[x].transform.lossyScale.y / 2, yPos + temporaryPrefabVariants[x].transform.lossyScale.y / 2, x);
 
-        for(obscuredPath.Lenght)
+        for(int i = 0; i < obscuredPath.Length; i++)
         {
             if(obstacleVariantBlock[x][i])
             {
-                obscuredPath[i] = true
+                obscuredPath[i] = true;
             }
         }
 
@@ -191,8 +206,8 @@ public class LevelManager : MonoBehaviour
         // 
 
         //pick random other that would work
-        x = Random.Range(0, temporaryPrefabVariants.Count)
-        for(obscuredPath.Length)
+        x = Random.Range(0, temporaryPrefabVariants.Count);
+        for(int i = 0; i < obscuredPath.Length; i++)
         {
             if(obstacleVariantBlock[x][i] && obscuredPath[i])
             {
@@ -200,133 +215,217 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        List<int> curObstacleBlock = new List<int>;
-
-        if(colliding)
+        if (colliding)
         {
-        //todo fix up here
-        var
-        array of lists (working ends)
-        array of lists (working starts)
+            //var
 
-        for(starts)
-        {
-        if (obstacleVariantBlock[x][i])
-        {
-        curObstacleBlock.Add(i)
-
-        for(ends[i])
-        {
-        if ends[i][j] - starts[i][j] < length of obstacle
-        {
-        working ends[i].Add(ends[i][j])
-        working starts[i].Add(starts[i][j])
-        }
-        }
-        }
-        for(curObstacleBlock)
-        {
-        check for the smallest start in all lists
-        check the free space in the first list against the two others
-        if both start and end is withing the first lists free space
-        in a new list add the end and start.
-        if only start is within the first lists free space
-        in the new list add start of first list and end of comparing list // same for end
-        if neither is within the first lists free space
-
-        }
-        }
-
-        //todo to here
-
-
-            if there is space left (y)
+            for(int i = 0; i < workingEnds.Length; i++)
             {
-                place at random working place
+                workingEnds[i] = new List<float>();
+                workingStarts[i] = new List<float>();
+            }
+
+            for (int i = 0; i < starts.Length; i++)
+            {
+                if (obstacleVariantBlock[x][i])
+                {
+                    curObstacleBlock.Add(i);
+
+                    for (int j = 0; i < curObstacleBlock.Count; i++)
+                    {
+                        for(int k = 0; k < ends[curObstacleBlock[j]].Count; i++)
+                        {
+                            if (ends[curObstacleBlock[j]][k] - starts[curObstacleBlock[j]][k] > temporaryPrefabLength[x])
+                            {
+                                workingEnds[j].Add(ends[curObstacleBlock[j]][k]);
+                                workingStarts[j].Add(starts[curObstacleBlock[j]][k]);
+                            }
+                        }
+                    }
+                }
+                if (curObstacleBlock.Count >= 2)
+                {
+                    for (int j = 0; j < workingEnds[curObstacleBlock[0]].Count; j++)
+                    {
+                        for (int k = 0; k < workingEnds[curObstacleBlock[1]].Count; j++)
+                        {
+
+                            if (workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j])
+                            {
+                                usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
+                                usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
+                            }
+                            else if (workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
+                            {
+                                usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
+                                usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
+                            }
+                            else if (workingEnds[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j])
+                            {
+                                usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
+                                usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
+                            }
+                            else if (workingStarts[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
+                            {
+                                usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
+                                usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
+                            }
+                        }
+                    }
+                }
+                for(int j = 0; j < curObstacleBlock.Count - 2; j++)//j
+                {
+                    for (int t = 0; t < usedStarts.Count; t++)//t
+                    {
+
+                        for (int k = 0; k < workingEnds[curObstacleBlock[j - 2]].Count; k++)//k
+                        {
+
+                            if (workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k])
+                            {
+                                temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
+                                temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
+                            }
+                            else if (workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
+                            {
+                                temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
+                                temporaryEnds.Add(usedEnds[k]);
+                            }
+                            else if (workingEnds[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k])
+                            {
+                                temporaryStarts.Add(usedStarts[k]);
+                                temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
+                            }
+                            else if (workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
+                            {
+                                temporaryStarts.Add(usedStarts[k]);
+                                temporaryEnds.Add(usedEnds[k]);
+                            }
+                        }
+                    }
+
+                    usedStarts = temporaryStarts;
+                    usedEnds = temporaryEnds;
+                    temporaryStarts = new List<float>();
+                    temporaryEnds = new List<float>();
+                }
+            }
+            for(int j = 0; j < usedStarts.Count; j++)
+            {
+                if(usedEnds[j] - usedStarts[j] < temporaryPrefabLength[x])
+                {
+                    usedEnds.RemoveAt(j);
+                    usedStarts.RemoveAt(j);
+                }
+            }
+
+            if(usedStarts.Count > 0)
+            {
+                int z = Random.Range(0, usedStarts.Count);
+                yPos = Random.Range(usedStarts[z] + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
+                                    usedEnds[z] - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
+                Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
             }
             else
             {
-                remove obsticle from list
+                temporaryPrefabVariants.RemoveAt(x);
+                obstacleVariantBlock.RemoveAt(x);
+                temporaryPrefabLength.RemoveAt(x);
             }
         }
         else
         {
-            place at random working place
+            yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2, 
+                            obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
+            Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
         }
-
-        //if overlap space (x)
-        //check if there is space left (y)
-        //if is place at random working place
-        //else remove obsticle from list
         //try again x times
-
-        */
     }
 
-    void FindAvilableYSpace(float newObstacleStart, float newObstacleEnd, bool x)
+    void FindAvilableYSpace(float newObstacleStart, float newObstacleEnd, int x) //todo have to debug
     {
-        /*
 
-        var
+        //var
         //array of lists (ends)
         //array of lists (starts)
-        List<float>[] starts = new List<float>[8];
-        List<float>[] ends = new List<float>[8];
-        bool[] working space = new bool[8];
+        bool[] workingSpace = new bool[8];
 
-        int var;
+        int var = 0;
 
 
-        Set to default (when starting to place a new pathway)
+        //Set to default (when starting to place a new pathway)
 
-        for(ends)
-        if(obsticleVariantBlock[x][j])
+        for (int j = 0; j < ends.Length; j++)
         {
+            ends[j] = new List<float>();
+            starts[j] = new List<float>();
 
-        ////fixing arrays
-        //fing biggest ends thats smaller than new obstacle start
+            if (obstacleVariantBlock[x][j])
+            {
+                
+                ends[j].Add(obstacleParent.transform.position.y);
+                starts[j].Add(obstacleParent.transform.position.y - temporaryPrefabLength[x]);
+                ////fixing arrays
+                //fing biggest ends thats smaller than new obstacle start
 
-        for(ends[j])
-        if i = 0
-        var = i
-        else if (ends[j][i] > ends[j][var] && ends[j][i] <= new obstacle start)
-        var = i
+                for (int i = 0; i < ends[j].Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        var = i;
+                    }
+                    else if (ends[j][i] > ends[j][var] && ends[j][i] <= newObstacleStart)
+                    {
+                        var = i;
+                    }
+                }
+                //if end of same index > new obstacle start
+                //end = new obstacle start  
+                if (starts[j][var] >= newObstacleStart)
+                {
+                    Debug.Log(starts[j][var] + " " + ends[j][var] + " " + newObstacleStart);
+                    ends[j].Add(ends[j][var]);
+                    starts[j].Add(ends[j][var]);
+                    starts[j][var] = newObstacleStart;
+                }
 
-        //if end of same index > new obstacle start
-        //end = new obstacle start
+                //find smallest starts thats bigger than new obstacle end
 
-        if starts[j][var] >= new obstacle start
-        ends[j].Add(ends[j][var])
-        starts[j].Add(ends[j][var])
-        starts[j][var] = new obstacle start
+                for (int i = 0; i < starts[j].Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        var = i;
+                    }
+                    else if (starts[j][i] < starts[j][var] && starts[j][i] >= newObstacleEnd)
+                    {
+                        var = i;
+                    }
+                }
 
+                //if star of same index < new obstacle end
+                //start = new obstacle end
 
-        //find smallest starts thats bigger than new obstacle end
-
-        for(starts[j])
-        if i = 0
-        var = i
-        else if (starts[j][i] < starts[j][var] && starts[j][i] >= new obstacle end)
-        var = i
-
-        //if star of same index < new obstacle end
-        //start = new obstacle end
-
-        if ends[j][var] >= new obstacle end
-        ends[j].Add(ends[j][var])
-        starts[j].Add(ends[j][var])
-        ends[j][var] = new obstacle end
-
-
-        for(ends[j])
-        if ends[j][i] > new obstacle start && < new obstacle end && starts[j][i] > new obstacle start && < new obstacle end
-        ends[j].removeAt(i)
-        starts[j].removeAt(i)
-
-        }
+                if (ends[j][var] >= newObstacleEnd)
+                {
+                    ends[j].Add(ends[j][var]);
+                    starts[j].Add(ends[j][var]);
+                    ends[j][var] = newObstacleEnd;
+                }
 
 
-        */
+
+                for(int i = 0; i < ends[j].Count; i++)
+                {
+                    if (ends[j][i] > newObstacleStart && ends[j][i] < newObstacleEnd && starts[j][i] > newObstacleStart && starts[j][i] < newObstacleEnd)
+                    {
+                        ends[j].RemoveAt(i);
+                        starts[j].RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+        }   
     }
 
     void FindWorkingObstacles()
@@ -334,7 +433,7 @@ public class LevelManager : MonoBehaviour
         for(int i = 0; i < prefabs.Count; i++)
         {
             obstacleVariantBlock.Add(prefabs[i].GetComponent<Info>().GetObstacleBlock());
-            temporaryPrefabLength.Add(prefabs[i].GetComponent<Info>().GetLenght());
+            temporaryPrefabLength.Add(prefabs[i].GetComponent<Info>().GetLength());
             temporaryPrefabVariants.Add(prefabs[i]);
         }
 

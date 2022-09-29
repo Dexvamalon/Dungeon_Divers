@@ -9,7 +9,7 @@ public class Info : MonoBehaviour
     [SerializeField] private bool[] obstacleblock = new bool[8];
     [SerializeField] private float blockPosition = 0f;
 
-    public float GetLenght()
+    public float GetLength()
     {
         return length;
     }
