@@ -593,7 +593,7 @@ MonoBehaviour:
   pathLengthMax: 10
   pathLengthMin: 4
   pauseLengthMax: 6
-  pauseLengthMin: 2
+  pauseLengthMin: 4
   placeChance: 4
   pathwayStructure1: 01000100
   pathwayStructure2: 01000000
@@ -973,6 +973,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ObstacleBoth2
       objectReference: {fileID: 0}
+    - target: {fileID: 1156601567149898045, guid: d24725d02717c47909a9a7ce0a1f5beb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d24725d02717c47909a9a7ce0a1f5beb, type: 3}
 --- !u!1001 &2111364889457224347
@@ -985,6 +989,10 @@ PrefabInstance:
     - target: {fileID: 2111364889000857542, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
       propertyPath: m_Name
       value: ObstacleBoth1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2111364889000857542, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2111364889000857594, guid: 865dc6288d14243af930ddd8aa927b74, type: 3}
       propertyPath: m_RootOrder
@@ -1086,6 +1094,10 @@ PrefabInstance:
     - target: {fileID: 7524944315610414780, guid: 9fee329ea7d2d4cf5949792fb5cf83a4, type: 3}
       propertyPath: m_Name
       value: ObstacleBoth3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7524944315610414780, guid: 9fee329ea7d2d4cf5949792fb5cf83a4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9fee329ea7d2d4cf5949792fb5cf83a4, type: 3}
