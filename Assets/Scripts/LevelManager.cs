@@ -47,6 +47,7 @@ public class LevelManager : MonoBehaviour
     private Transform obstacleParent;
     // postion of the end of a segment, empty game object with the obstacles within, 
     [SerializeField] private float placePos = 10f;
+    [SerializeField] private float deletePos = -10f;
     [SerializeField] private int maxObstacles = 5;
     [SerializeField] private int maxObstaclesPause = 3;
 
@@ -71,16 +72,19 @@ public class LevelManager : MonoBehaviour
         for(int i = 0; i < obstacleParentsList.Count; i++)
         {
             obstacleParentsList[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
+            if (obstacleParentsList[i].position.y < deletePos)
+            {
+                Destroy(obstacleParentsList[i].gameObject);
+                obstacleParentsList.RemoveAt(i);
+            }
         }
 
         if(obstacleParent == null)
         {
-            Debug.Log("place first");
             PlacePathway();
         }
         else if(obstacleParent.position.y < placePos)
         {
-            Debug.Log("place normal" + obstacleParent.position.y);
             PlacePathway();
         }
     }
@@ -126,8 +130,6 @@ public class LevelManager : MonoBehaviour
                             break;
                     }
                 }
-                //Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
-                //Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
             }
             if(!hasPlacedDown)
             {
@@ -148,15 +150,12 @@ public class LevelManager : MonoBehaviour
                         break;
                 }
             }
-            //Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
-            //Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
-
             onBrake = true;
         }
         else
         {
             pathLength = Random.Range(pauseLengthMax, pauseLengthMin);
-
+            
             for(int i = 0; i < paths.Length; i++)
             {
                 activePathwayDown[i] = true;
@@ -165,8 +164,8 @@ public class LevelManager : MonoBehaviour
             onBrake = false;
         }
 
-        Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
-        Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
+        //Debug.Log("up" + activePathwayUp[0] + " " + activePathwayUp[1] + " " + activePathwayUp[2] + " " + activePathwayUp[3]);
+        //Debug.Log("down" + activePathwayDown[0] + " " + activePathwayDown[1] + " " + activePathwayDown[2] + " " + activePathwayDown[3]);
 
         PlaceObstacles();
     }
@@ -181,10 +180,17 @@ public class LevelManager : MonoBehaviour
         List<float> temporaryStarts = new List<float>();    //list(temporary starts)
         List<float> temporaryEnds = new List<float>();
 
+        obscuredPath = new bool[8];
+
         float yPos;
-        bool colliding = false;
 
         FindWorkingObstacles();
+
+        obstacleParent = new GameObject("Obstacle parent").transform;
+        obstacleParent.position = new Vector3(0, placePos + pathLength, 0);
+        obstacleParentsList.Add(obstacleParent);
+
+        Debug.Log(pathLength);
 
         if (temporaryPrefabVariants.Count > 0)
         {
@@ -192,13 +198,6 @@ public class LevelManager : MonoBehaviour
             //pick random of the available ones
             int x = Random.Range(0, temporaryPrefabVariants.Count);
 
-
-            obstacleParent = new GameObject("Obstacle parent").transform;
-            obstacleParent.position = new Vector3(0, placePos + pathLength, 0);
-            Debug.Log(obstacleParent.position.y);
-            obstacleParentsList.Add(obstacleParent);
-            //Debug.Log(x);
-            //Debug.Log(temporaryPrefabVariants.Count);
             yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                 obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
 
@@ -208,17 +207,29 @@ public class LevelManager : MonoBehaviour
 
             for (int i = 0; i < obscuredPath.Length; i++)
             {
-                if (obstacleVariantBlock[x][i])
-                {
-                    obscuredPath[i] = true;
-                }
+                obscuredPath[i] = obstacleVariantBlock[x][i];
             }
 
             temporaryPrefabVariants.RemoveAt(x);
             obstacleVariantBlock.RemoveAt(x);
             temporaryPrefabLength.RemoveAt(x);
-            if(temporaryPrefabVariants.Count <= 0)
+
+            for (int i = 0; i < obstacleVariantBlock.Count; i++)
             {
+                /*Debug.Log("x" + obstacleVariantBlock[i][0] + " " +
+                          obstacleVariantBlock[i][1] + " " +
+                          obstacleVariantBlock[i][2] + " " +
+                          obstacleVariantBlock[i][3] + " " +
+                          obstacleVariantBlock[i][4] + " " +
+                          obstacleVariantBlock[i][5] + " " +
+                          obstacleVariantBlock[i][6] + " " +
+                          obstacleVariantBlock[i][7]);*/
+            }
+            //Debug.Log("break");
+
+            if (temporaryPrefabVariants.Count <= 0)
+            {
+                //Debug.Log("x nothing");
                 return;
             }
             // 
@@ -231,23 +242,22 @@ public class LevelManager : MonoBehaviour
             {
                 curMaxObstacles = maxObstacles;
             }
-            for (int a = 0; a < curMaxObstacles; a++)
+            for (int a = 0; a < curMaxObstacles-1; a++)
             {
                 List<int> curObstacleBlock = new List<int>();
+                bool colliding = false;
 
                 //pick random other that would work
                 x = Random.Range(0, temporaryPrefabVariants.Count);
                 for (int i = 0; i < obscuredPath.Length; i++)
                 {
-                    //Debug.Log(x + " " + i);
-                    //Debug.Log(obstacleVariantBlock.Count + " " + obscuredPath.Length);
                     if (obstacleVariantBlock[x][i] && obscuredPath[i])
                     {
                         colliding = true;
                     }
                 }
 
-                if (colliding)
+                if (colliding) // todo debug
                 {
                     //var
 
@@ -262,93 +272,98 @@ public class LevelManager : MonoBehaviour
                         if (obstacleVariantBlock[x][i])
                         {
                             curObstacleBlock.Add(i);
-
-                            for (int j = 0; j < curObstacleBlock.Count; j++)
-                            {
-                                for (int k = 0; k < ends[curObstacleBlock[j]].Count; k++)
-                                {
-                                    if (ends[curObstacleBlock[j]][k] - starts[curObstacleBlock[j]][k] > temporaryPrefabLength[x])
-                                    {
-                                        Debug.Log(j + " " + workingEnds.Length);
-                                        workingEnds[j].Add(ends[curObstacleBlock[j]][k]);
-                                        workingStarts[j].Add(starts[curObstacleBlock[j]][k]);
-                                    }
-                                }
-                            }
-                        }
-                        if (curObstacleBlock.Count >= 2)
-                        {
-                            for (int j = 0; j < workingEnds[curObstacleBlock[0]].Count; j++)
-                            {
-                                for (int k = 0; k < workingEnds[curObstacleBlock[1]].Count; k++)
-                                {
-                                    Debug.Log(j + " " + k + " " + workingEnds[curObstacleBlock[0]].Count + " " + workingEnds[curObstacleBlock[1]].Count + " + " + workingStarts[curObstacleBlock[0]].Count + " " + workingStarts[curObstacleBlock[1]].Count);
-                                    if (workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j])
-                                    {
-                                        usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
-                                        usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
-                                    }
-                                    else if (workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
-                                    {
-                                        usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
-                                        usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
-                                    }
-                                    else if (workingEnds[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j])
-                                    {
-                                        usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
-                                        usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
-                                    }
-                                    else if (workingStarts[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
-                                    {
-                                        usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
-                                        usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
-                                    }
-                                }
-                            }
-                        }
-                        for (int j = 0; j < curObstacleBlock.Count - 2; j++)//j
-                        {
-                            for (int t = 0; t < usedStarts.Count; t++)//t
-                            {
-
-                                for (int k = 0; k < workingEnds[curObstacleBlock[j - 2]].Count; k++)//k
-                                {
-
-                                    if (workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k])
-                                    {
-                                        temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
-                                        temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
-                                    }
-                                    else if (workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
-                                    {
-                                        temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
-                                        temporaryEnds.Add(usedEnds[k]);
-                                    }
-                                    else if (workingEnds[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k])
-                                    {
-                                        temporaryStarts.Add(usedStarts[k]);
-                                        temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
-                                    }
-                                    else if (workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
-                                    {
-                                        temporaryStarts.Add(usedStarts[k]);
-                                        temporaryEnds.Add(usedEnds[k]);
-                                    }
-                                }
-                            }
-
-                            usedStarts = temporaryStarts;
-                            usedEnds = temporaryEnds;
-                            temporaryStarts = new List<float>();
-                            temporaryEnds = new List<float>();
                         }
                     }
+                    for (int j = 0; j < curObstacleBlock.Count; j++)
+                    {
+                        for (int k = 0; k < ends[curObstacleBlock[j]].Count; k++)
+                        {
+                            if (ends[curObstacleBlock[j]][k] - starts[curObstacleBlock[j]][k] > temporaryPrefabLength[x])
+                            {
+                                workingEnds[j].Add(ends[curObstacleBlock[j]][k]);
+                                workingStarts[j].Add(starts[curObstacleBlock[j]][k]);
+                                //Debug.Log("1 Removed");
+                            }
+                        }
+                    }
+
+                    if (curObstacleBlock.Count >= 2)
+                    {
+                        for (int j = 0; j < workingEnds[curObstacleBlock[0]].Count; j++)
+                        {
+                            for (int k = 0; k < workingEnds[curObstacleBlock[1]].Count; k++)
+                            {
+                                if (workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j])
+                                {
+                                    usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
+                                    usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
+                                }
+                                else if (workingStarts[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingStarts[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
+                                {
+                                    usedStarts.Add(workingStarts[curObstacleBlock[1]][k]);
+                                    usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
+                                }
+                                else if (workingEnds[curObstacleBlock[1]][k] > workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingEnds[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j])
+                                {
+                                    usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
+                                    usedEnds.Add(workingEnds[curObstacleBlock[1]][k]);
+                                }
+                                else if (workingStarts[curObstacleBlock[1]][k] < workingStarts[curObstacleBlock[0]][j] && workingEnds[curObstacleBlock[1]][k] > workingEnds[curObstacleBlock[0]][j])
+                                {
+                                    usedStarts.Add(workingStarts[curObstacleBlock[0]][j]);
+                                    usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
+                                }
+                            }
+                        }
+                        //Debug.Log("2 Removed");
+                    }
+                    for (int j = 0; j < curObstacleBlock.Count - 2; j++)//j
+                    {
+                        for (int t = 0; t < usedStarts.Count; t++)//t
+                        {
+
+                            for (int k = 0; k < workingEnds[curObstacleBlock[j - 2]].Count; k++)//k
+                            {
+
+                                if (workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k])
+                                {
+                                    temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
+                                    temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
+                                }
+                                else if (workingStarts[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
+                                {
+                                    temporaryStarts.Add(workingStarts[curObstacleBlock[j - 2]][k]);
+                                    temporaryEnds.Add(usedEnds[k]);
+                                }
+                                else if (workingEnds[curObstacleBlock[j - 2]][k] > usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] < usedEnds[k] && workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k])
+                                {
+                                    temporaryStarts.Add(usedStarts[k]);
+                                    temporaryEnds.Add(workingEnds[curObstacleBlock[j - 2]][k]);
+                                }
+                                else if (workingStarts[curObstacleBlock[j - 2]][k] < usedStarts[k] && workingEnds[curObstacleBlock[j - 2]][k] > usedEnds[k])
+                                {
+                                    temporaryStarts.Add(usedStarts[k]);
+                                    temporaryEnds.Add(usedEnds[k]);
+                                }
+                            }
+                        }
+
+                        usedStarts = temporaryStarts;
+                        usedEnds = temporaryEnds;
+                        temporaryStarts = new List<float>();
+                        temporaryEnds = new List<float>();
+
+                        //Debug.Log("3 Removed");
+                    }
+
                     for (int j = 0; j < usedStarts.Count; j++)
                     {
                         if (usedEnds[j] - usedStarts[j] < temporaryPrefabLength[x])
                         {
                             usedEnds.RemoveAt(j);
                             usedStarts.RemoveAt(j);
+                            j--;
+                            //Debug.Log("4 Removed");
                         }
                     }
 
@@ -358,16 +373,40 @@ public class LevelManager : MonoBehaviour
                         yPos = Random.Range(usedStarts[z] + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                             usedEnds[z] - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
                         Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
-                    }
-                    else
-                    {
-                        temporaryPrefabVariants.RemoveAt(x);
-                        obstacleVariantBlock.RemoveAt(x);
-                        temporaryPrefabLength.RemoveAt(x);
-                        if (temporaryPrefabVariants.Count <= 0)
+                        a++;
+
+                        FindAvilableYSpace(yPos - temporaryPrefabVariants[x].transform.lossyScale.y / 2, yPos + temporaryPrefabVariants[x].transform.lossyScale.y / 2, x);
+
+                        for (int i = 0; i < obscuredPath.Length; i++)
                         {
-                            return;
+                            if (obstacleVariantBlock[x][i])
+                            {
+                                obscuredPath[i] = true;
+                            }
                         }
+                    }
+                    
+                    temporaryPrefabVariants.RemoveAt(x);
+                    obstacleVariantBlock.RemoveAt(x);
+                    temporaryPrefabLength.RemoveAt(x);
+
+                    for (int i = 0; i < obstacleVariantBlock.Count; i++)
+                    {
+                        Debug.Log("x" + obstacleVariantBlock[i][0] + " " +
+                                  obstacleVariantBlock[i][1] + " " +
+                                  obstacleVariantBlock[i][2] + " " +
+                                  obstacleVariantBlock[i][3] + " " +
+                                  obstacleVariantBlock[i][4] + " " +
+                                  obstacleVariantBlock[i][5] + " " +
+                                  obstacleVariantBlock[i][6] + " " +
+                                  obstacleVariantBlock[i][7]);
+                    }
+                    Debug.Log("break");
+
+                    if (temporaryPrefabVariants.Count <= 0)
+                    {
+                        Debug.Log("x nothing");
+                        return;
                     }
                 }
                 else
@@ -375,8 +414,56 @@ public class LevelManager : MonoBehaviour
                     yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                     obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
                     Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
+
+                    FindAvilableYSpace(yPos - temporaryPrefabVariants[x].transform.lossyScale.y / 2, yPos + temporaryPrefabVariants[x].transform.lossyScale.y / 2, x);
+
+                    for (int i = 0; i < obscuredPath.Length; i++)
+                    {
+                        if (obstacleVariantBlock[x][i])
+                        {
+                            obscuredPath[i] = true;
+                        }
+                    }
+
+                    a++;
+
+                    temporaryPrefabVariants.RemoveAt(x);
+                    obstacleVariantBlock.RemoveAt(x);
+                    temporaryPrefabLength.RemoveAt(x);
+
+                    for (int i = 0; i < obstacleVariantBlock.Count; i++)
+                    {
+                        /*Debug.Log("x" + obstacleVariantBlock[i][0] + " " +
+                                  obstacleVariantBlock[i][1] + " " +
+                                  obstacleVariantBlock[i][2] + " " +
+                                  obstacleVariantBlock[i][3] + " " +
+                                  obstacleVariantBlock[i][4] + " " +
+                                  obstacleVariantBlock[i][5] + " " +
+                                  obstacleVariantBlock[i][6] + " " +
+                                  obstacleVariantBlock[i][7]);*/
+                    }
+                    //Debug.Log("break");
+
+                    if (temporaryPrefabVariants.Count <= 0)
+                    {
+                        //Debug.Log("x nothing");
+                        return;
+                    }
                 }
+
+                a--;
             }
+        }
+        for (int i = 0; i < obstacleVariantBlock.Count; i++)
+        {
+            /*Debug.Log("x" + obstacleVariantBlock[i][0] + " " +
+                      obstacleVariantBlock[i][1] + " " +
+                      obstacleVariantBlock[i][2] + " " +
+                      obstacleVariantBlock[i][3] + " " +
+                      obstacleVariantBlock[i][4] + " " +
+                      obstacleVariantBlock[i][5] + " " +
+                      obstacleVariantBlock[i][6] + " " +
+                      obstacleVariantBlock[i][7]);*/
         }
     }
 
@@ -421,7 +508,6 @@ public class LevelManager : MonoBehaviour
                 //end = new obstacle start  
                 if (starts[j][var] >= newObstacleStart)
                 {
-                    //Debug.Log(starts[j][var] + " " + ends[j][var] + " " + newObstacleStart);
                     ends[j].Add(ends[j][var]);
                     starts[j].Add(ends[j][var]);
                     starts[j][var] = newObstacleStart;
@@ -468,6 +554,10 @@ public class LevelManager : MonoBehaviour
 
     void FindWorkingObstacles()
     {
+        obstacleVariantBlock = new List<bool[]>();
+        temporaryPrefabLength = new List<float>();
+        temporaryPrefabVariants = new List<GameObject>();
+
         for(int i = 0; i < prefabs.Count; i++)
         {
             obstacleVariantBlock.Add(prefabs[i].GetComponent<Info>().GetObstacleBlock());
@@ -475,13 +565,14 @@ public class LevelManager : MonoBehaviour
             temporaryPrefabVariants.Add(prefabs[i]);
         }
 
-        for(int i = 0; i < temporaryPrefabVariants.Count; i++)
+        for (int i = 0; i < temporaryPrefabVariants.Count; i++)
         {
             if(temporaryPrefabLength[i] > pathLength)
             {
                 temporaryPrefabVariants.RemoveAt(i);
                 obstacleVariantBlock.RemoveAt(i);
                 temporaryPrefabLength.RemoveAt(i);
+                i--;
             }
         }
 
@@ -496,6 +587,7 @@ public class LevelManager : MonoBehaviour
                         obstacleVariantBlock.RemoveAt(x);
                         temporaryPrefabVariants.RemoveAt(x);
                         temporaryPrefabLength.RemoveAt(x);
+                        x--;
                     }
                 }
             }
@@ -512,20 +604,21 @@ public class LevelManager : MonoBehaviour
                         obstacleVariantBlock.RemoveAt(x);
                         temporaryPrefabVariants.RemoveAt(x);
                         temporaryPrefabLength.RemoveAt(x);
+                        x--;
                     }
                 }
             }
         }
         for(int i = 0; i < obstacleVariantBlock.Count; i++)
         {
-            Debug.Log("i" + obstacleVariantBlock[i][0] + " " +
+            /*Debug.Log("i" + obstacleVariantBlock[i][0] + " " +
                       obstacleVariantBlock[i][1] + " " +
                       obstacleVariantBlock[i][2] + " " +
                       obstacleVariantBlock[i][3] + " " +
                       obstacleVariantBlock[i][4] + " " +
                       obstacleVariantBlock[i][5] + " " +
                       obstacleVariantBlock[i][6] + " " +
-                      obstacleVariantBlock[i][7]);
+                      obstacleVariantBlock[i][7]);*/
         }
     }
 
