@@ -11,7 +11,7 @@ public class Info : MonoBehaviour
 
     public float GetLength()
     {
-        return length;
+        return transform.lossyScale.y * gameObject.GetComponent<BoxCollider2D>().size.y;
     }
 
     public bool[] GetObstacleBlock()

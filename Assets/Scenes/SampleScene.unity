@@ -590,8 +590,8 @@ MonoBehaviour:
   - {fileID: 729064801}
   - {fileID: 1213364695}
   levelSpeed: 4
-  pathLengthMax: 10
-  pathLengthMin: 4
+  pathLengthMax: 20
+  pathLengthMin: 20
   pauseLengthMax: 6
   pauseLengthMin: 4
   placeChance: 4
@@ -611,6 +611,9 @@ MonoBehaviour:
   - {fileID: 7524944315610414780, guid: 8ccfac61c20064d328e0ed706b84445e, type: 3}
   - {fileID: 7524944315610414780, guid: 9fee329ea7d2d4cf5949792fb5cf83a4, type: 3}
   placePos: 10
+  deletePos: -10
+  maxObstacles: 5
+  maxObstaclesPause: 3
 --- !u!4 &888193223
 Transform:
   m_ObjectHideFlags: 0
