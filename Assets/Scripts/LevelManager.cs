@@ -77,6 +77,7 @@ public class LevelManager : MonoBehaviour
             {
                 Destroy(obstacleParentsList[i].gameObject);
                 obstacleParentsList.RemoveAt(i);
+                i--;
             }
         }
 
@@ -256,6 +257,7 @@ public class LevelManager : MonoBehaviour
             {
                 curMaxObstacles = maxObstacles;
             }
+            int y = 0;
             for (int a = 0; a < curMaxObstacles-1; a++)
             {
                 List<int> curObstacleBlock = new List<int>();
@@ -530,6 +532,12 @@ public class LevelManager : MonoBehaviour
                 }
 
                 a--;
+                y++;
+                if (y > 50)
+                {
+                    Debug.Break(); //todo There's a infinite loop somewhere in the max obstacle loop.
+                    return;
+                }
                 Debug.Log("//////////////////" + (curMaxObstacles - 2 - a));
             }
         }
