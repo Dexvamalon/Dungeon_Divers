@@ -8,10 +8,11 @@ public class Info : MonoBehaviour
     [Header("blockVariants")]
     [SerializeField] private bool[] obstacleblock = new bool[8];
     [SerializeField] private float blockPosition = 0f;
+    [SerializeField] private BoxCollider2D groundCollider;
 
     public float GetLength()
     {
-        return transform.lossyScale.y * gameObject.GetComponent<BoxCollider2D>().size.y;
+        return transform.lossyScale.y * groundCollider.size.y;
     }
 
     public bool[] GetObstacleBlock()

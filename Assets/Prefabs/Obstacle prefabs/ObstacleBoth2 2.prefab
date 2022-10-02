@@ -145,3 +145,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleblock: 0001010000010100
   blockPosition: 0
+  groundCollider: {fileID: 1156601567149897987}
