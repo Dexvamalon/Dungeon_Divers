@@ -234,6 +234,10 @@ MonoBehaviour:
   speedCap: 5
   uppdateFrequency: 0.02
   bounceLeeway: 0.1
+  invicibility: 1
+  invicible: 0
+  groundInt: 6
+  airInt: 9
   jumpPressDelay: 0.3
   jumpHeight: 2
   startHeight: 0
@@ -589,14 +593,18 @@ MonoBehaviour:
   pathwayStructure5: 00000101
   prefabs:
   - {fileID: 2111364889000857542, guid: ebb48c42c38f743e88746f48f125df7b, type: 3}
-  - {fileID: 2111364889000857542, guid: ed1e5172b952c7d408652ca2e65d01d0, type: 3}
-  - {fileID: 2111364889000857542, guid: 0802c9bf9bff657439c3d8b64c6d5779, type: 3}
-  - {fileID: 2111364889000857542, guid: d07c4c4726f610f4ba2f4f0c1556bf90, type: 3}
+  - {fileID: 5890144562437662454, guid: ed1e5172b952c7d408652ca2e65d01d0, type: 3}
+  - {fileID: 5890144562437662454, guid: cf403cb3687d0c24d9f5d0f9df85a3d7, type: 3}
+  - {fileID: 5890144562437662454, guid: 73332438ae6733641ad8495e327edaf7, type: 3}
   - {fileID: 2111364889000857542, guid: 51aada2537926044c862fd1d18e7e2c3, type: 3}
-  - {fileID: 2111364889000857542, guid: 4213c1a933c596946a9e5f1ad304d9a4, type: 3}
-  - {fileID: 2111364889000857542, guid: 3648bc05de62ca14496f7cff230153c4, type: 3}
+  - {fileID: 2126884906811969331, guid: fe2b9d91a7d563c4fa2b14c0ed323373, type: 3}
+  - {fileID: 2126884906811969331, guid: a19849b8a1c5994479718b70549f8f46, type: 3}
   - {fileID: 2111364889000857542, guid: 6a68fcb02c09f88419a84ddf6d1e7a60, type: 3}
-  - {fileID: 2111364889000857542, guid: 64c88c627b2b2fd49a6de9fcd3a6f8de, type: 3}
+  - {fileID: 5046045369856985476, guid: 64c88c627b2b2fd49a6de9fcd3a6f8de, type: 3}
+  - {fileID: 2111364889000857542, guid: fd0e10cec73b95442a1cf08fb4622623, type: 3}
+  - {fileID: 369342422853119569, guid: 613e22fb23c1a9849beaf3a76087e97a, type: 3}
+  - {fileID: 369342422853119569, guid: 556a19066002dc94e942e0d63bcbf31c, type: 3}
+  - {fileID: 369342422853119569, guid: 247ff60e3fdb6414bb69a85e2113329f, type: 3}
   placePos: 10
   deletePos: -10
   maxObstacles: 5
