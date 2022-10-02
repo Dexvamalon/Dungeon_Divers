@@ -552,7 +552,6 @@ public class LevelManager : MonoBehaviour
         //var
         //array of lists (ends)
         //array of lists (starts)
-        bool[] workingSpace = new bool[8];
 
         int var = 0;
 

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Info : MonoBehaviour
 {
-    private float length = 1f;
     [Header("blockVariants")]
     [SerializeField] private bool[] obstacleblock = new bool[8];
     [SerializeField] private float blockPosition = 0f;
-    [SerializeField] private BoxCollider2D groundCollider;
+    [SerializeField] public float damage = 1f;
+    [SerializeField] private float length = 1f;
 
     public float GetLength()
     {
-        return transform.lossyScale.y * groundCollider.size.y;
+        return length;
     }
 
     public bool[] GetObstacleBlock()

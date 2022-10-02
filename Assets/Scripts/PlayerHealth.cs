@@ -6,10 +6,12 @@ public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
     private float curHealth;
+    private PlayerMovement playerMovement;
 
     private void Start()
     {
         curHealth = maxHealth;
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     public void TakeDamage(float damage)
@@ -21,6 +23,7 @@ public class PlayerHealth : MonoBehaviour
             Death();
             Debug.Log("Player died");
         }
+        playerMovement.StartInvicibility();
     }
 
     private void Death()

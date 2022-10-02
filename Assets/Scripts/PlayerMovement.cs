@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
@@ -21,9 +22,14 @@ public class PlayerMovement : MonoBehaviour
     private float temporaryUppdateFrequency;
     private float currentLane = 0f;
     [SerializeField] public float bounceLeeway = 0.1f;
+    [SerializeField] private float invicibility = 1f;
+    private float temporaryInvicibility = 1f;
+    public bool invicible = false;
 
     [Header("Jumping")]
     private bool isInAir = false;
+    [SerializeField] private int groundInt = 6;
+    [SerializeField] private int airInt = 9;
     [SerializeField] private float jumpPressDelay = 1f;
     private float[] temporaryJumpPressDelay = new float[4];
     [SerializeField] private float jumpHeight = 1f;
@@ -47,11 +53,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     private Rigidbody2D rb2d;
+    private PlayerHealth playerHealth;
 
     private void Start()
     {
         GetLanes();
         rb2d = GetComponent<Rigidbody2D>();
+        playerHealth = GetComponent<PlayerHealth>();
         _targetLocation = transform.position;
         temporaryUppdateFrequency = uppdateFrequency;
     }
@@ -73,6 +81,14 @@ public class PlayerMovement : MonoBehaviour
         ExecuteInput();
         Move();
         Jump();
+        if(temporaryInvicibility > 0)
+        {
+            temporaryInvicibility -= Time.deltaTime;
+        }
+        else
+        {
+            invicible = false;
+        }
 
     }
 
@@ -104,6 +120,8 @@ public class PlayerMovement : MonoBehaviour
                 if (temporaryJumpPressDelay[i] > 0 && newInput[i] && !isInAir)
                 {
                     isInAir = true;
+                    gameObject.layer = airInt;
+
                     goingUpp = true;
                     tempJumpSpeed = jumpSpeed;
                     Debug.Log("Jumping");
@@ -133,10 +151,10 @@ public class PlayerMovement : MonoBehaviour
                 case 1:
                     MoveBetweenLanes();
                     break;
-                case 2:
+                /*case 2:
                     DashBeweenLanes();
                     Debug.Log("Dashing");
-                    break;
+                    break;*/
                 default:
                     break;
             }
@@ -257,13 +275,102 @@ public class PlayerMovement : MonoBehaviour
             if (transform.position.y == startHeight)
             {
                 isInAir = false;
+                gameObject.layer = groundInt;
             }
         }
     }
 
-    public void BouncePlayer()
+    public void BouncePlayer(List<GameObject> obstacles)
     {
-        float newLocation = 0;
+        //if(!invicible)
+        //{
+            List<float> rellevantStarts = new List<float>();
+            List<float> rellevantEnds = new List<float>();
+            List<int> x = new List<int>();
+            bool[] obscuredRows = new bool[4];
+
+            for (int i = 0; i < obstacles.Count; i++)
+            {
+                if(obstacles[i].GetComponent<Info>() == null)
+                {
+                    Debug.Log("oki");
+                }
+                rellevantStarts.Add(obstacles[i].transform.position.y - obstacles[i].GetComponent<Info>().GetLength() / 2);
+                if(gameObject.layer == groundInt)
+                {
+                    rellevantEnds.Add(obstacles[i].transform.position.y + obstacles[i].GetComponent<Info>().GetLength() / 2);
+                }
+                else
+                {
+                    rellevantEnds.Add(obstacles[i].GetComponentInChildren<Transform>().position.y + obstacles[i].GetComponentInChildren<BoxCollider2D>().size.y / 2);
+                    Debug.Log(obstacles[i].GetComponentInChildren<Obstacle>().gameObject.transform.position.y);
+                    Debug.Log(obstacles[i].GetComponentInChildren<BoxCollider2D>().size.y);
+                }
+                x.Add(i);
+            }
+            Debug.Log(x.Count);
+            Debug.Log(rellevantStarts[0]);
+            Debug.Log(rellevantEnds[0]);
+
+            for (int i = 0; i < rellevantStarts.Count; i++)
+            {
+                if (rellevantStarts[i] >= transform.position.y + bounceLeeway || rellevantEnds[i] <= transform.position.y - bounceLeeway)
+                {
+                    rellevantStarts.RemoveAt(i);
+                    rellevantEnds.RemoveAt(i);
+                    x.RemoveAt(i);
+                    i--;
+                }
+            }
+            Debug.Log(x.Count);
+
+            if(rellevantStarts != null)
+            {
+                for (int i = 0; i < rellevantStarts.Count; i++)
+                {
+                    bool[] temporaryBoolArray = new bool[8];
+                    temporaryBoolArray = obstacles[x[i]].GetComponent<Info>().GetObstacleBlock();
+
+                    for (int j = 0; j < obscuredRows.Length; j++)
+                    {
+                        if (temporaryBoolArray[j + 4])
+                        {
+                            obscuredRows[j] = true;
+                        }
+                    }
+                }
+                Debug.Log(obscuredRows[0] + " " +
+                        obscuredRows[1] + " " +
+                        obscuredRows[2] + " " +
+                        obscuredRows[3]);
+
+                int y = 0;
+                for (int i = 0; i < obscuredRows.Length; i++)
+                {
+                    if (!obscuredRows[i])
+                    {
+                        if (y == 0)
+                        {
+                            y = i;
+                        }
+                        else if (Mathf.Abs(transform.position.x - lanes[i]) < Mathf.Abs(transform.position.x - lanes[y]))
+                        {
+                            y = i;
+                        }
+                    }
+                }
+                Debug.Log(lanes[y]);
+
+                canDashAgain = false;
+                _targetLocation.x = lanes[y];
+                tempMoveSpeed = moveSpeed;
+            }
+        //}
+        
+
+
+
+        /*float newLocation = 0;
         bool firstRight = true;
 
         if (_targetLocation.x > transform.position.x)
@@ -305,6 +412,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         canDashAgain = false;
-        _targetLocation.x = newLocation;
+        _targetLocation.x = newLocation;*/
+    }
+
+    public void StartInvicibility()
+    {
+        temporaryInvicibility = invicibility;
+        invicible = true;
     }
 }
