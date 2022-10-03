@@ -275,7 +275,7 @@ public class LevelManager : MonoBehaviour
                     }
                 }
 
-                if (colliding) // todo debug
+                if (colliding)
                 {
                     //var
 
@@ -386,21 +386,6 @@ public class LevelManager : MonoBehaviour
 
                             //Debug.Log("3 Removed");
                         }
-
-                        if(usedStarts.Count <= 0)
-                        {
-                            temporaryPrefabVariants.RemoveAt(x);
-                            obstacleVariantBlock.RemoveAt(x);
-                            temporaryPrefabLength.RemoveAt(x);
-                        }
-
-                        if (temporaryPrefabVariants.Count <= 0)
-                        {
-                            Debug.Log("x nothing");
-                            a--;
-                            Debug.Log("//////////////////" + (curMaxObstacles - 2 - a));
-                            return;
-                        }
                     }
                     else
                     {
@@ -410,7 +395,7 @@ public class LevelManager : MonoBehaviour
                             usedEnds.Add(workingEnds[curObstacleBlock[0]][j]);
                         }
                     }
-
+                    
                     for (int i = 0; i < usedStarts.Count; i++)
                     {
                         Debug.Log(usedStarts[i]);
@@ -453,6 +438,20 @@ public class LevelManager : MonoBehaviour
                                 obscuredPath[i] = true;
                             }
                         }
+                    }
+                    else
+                    {
+                        temporaryPrefabVariants.RemoveAt(x);
+                        obstacleVariantBlock.RemoveAt(x);
+                        temporaryPrefabLength.RemoveAt(x);
+                    }
+
+                    if (temporaryPrefabVariants.Count <= 0)
+                    {
+                        Debug.Log("x nothing");
+                        a--;
+                        Debug.Log("//////////////////" + (curMaxObstacles - 2 - a));
+                        return;
                     }
                     /*
                     temporaryPrefabVariants.RemoveAt(x);
