@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2111364889000857541}
   - component: {fileID: 2111364889000857593}
   m_Layer: 7
-  m_Name: ObstacleDown3 3
+  m_Name: ObstacleDown4 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,7 +168,7 @@ Transform:
   m_GameObject: {fileID: 5853546419995288637}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 6, y: 3, z: 1}
+  m_LocalScale: {x: 8, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2111364889000857594}
