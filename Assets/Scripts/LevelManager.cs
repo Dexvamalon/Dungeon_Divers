@@ -104,7 +104,9 @@ public class LevelManager : MonoBehaviour
                     temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
                 }
 
-                temporaryTransform.gameObject.GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(obstacleParentsList[i].GetChild(j).transform.position.y) * -1;
+                temporaryTransform.parent.transform.position = new Vector3(temporaryTransform.parent.transform.position.x, 
+                                                                            temporaryTransform.parent.transform.position.y, 
+                                                                            obstacleParentsList[i].GetChild(j).transform.position.y);
             }
 
             if (obstacleParentsList[i].position.y < deletePos)
