@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
@@ -16,9 +17,9 @@ public class UI : MonoBehaviour
         
     }
 
-    void LoadScene()
+    public void LoadScene(string x)
     {
-        //todo create a loading function
+        SceneManager.LoadScene(x);
     }
 
     public void QuitGame()
