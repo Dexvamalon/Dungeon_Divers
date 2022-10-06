@@ -10,6 +10,9 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<Transform> obstacles = new List<Transform>();
     [SerializeField] private float levelSpeed = 1f;
+    public bool isDead = false;
+    public int score = 0;
+    private UI ui;
 
     [Header("Pathway variables")]
     private bool[] activePathwayUp = new bool[4];
@@ -66,6 +69,7 @@ public class LevelManager : MonoBehaviour
     {
         paths = FindObjectOfType<PlayerMovement>().lanes;
         player = GameObject.FindGameObjectWithTag("Player");
+        ui = FindObjectOfType<UI>();
         /*obstacleParent = new GameObject("Obstacle parent").transform;
         obstacleParentsList.Add(obstacleParent);
         Instantiate(prefabs[1], new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
@@ -77,7 +81,10 @@ public class LevelManager : MonoBehaviour
     {
         for(int i = 0; i < obstacleParentsList.Count; i++)
         {
-            obstacleParentsList[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
+            if(!isDead)
+            {
+                obstacleParentsList[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
+            }
 
             for (int j = 0; j < obstacleParentsList[i].childCount; j++)
             {
@@ -131,6 +138,8 @@ public class LevelManager : MonoBehaviour
 
     void PlacePathway()
     {
+        score++;
+        ui.SetStats(-1, score);
         for(int i = 0; i < activePathwayDown.Length; i++)
         {
             activePathwayDown[i] = false;

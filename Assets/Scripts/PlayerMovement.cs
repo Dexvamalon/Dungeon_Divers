@@ -50,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashAccelerator = 1.5f;
     [SerializeField] private float dashDecelerator = 0.5f;
     private bool canDashAgain = true;
+    public bool isDead = false;
 
     [Header("References")]
     private Rigidbody2D rb2d;
@@ -77,19 +78,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        CheckForInput();
-        ExecuteInput();
-        Move();
-        Jump();
-        if(temporaryInvicibility > 0)
+        if(!isDead)
         {
-            temporaryInvicibility -= Time.deltaTime;
+            CheckForInput();
+            ExecuteInput();
+            Move();
+            Jump();
+            if (temporaryInvicibility > 0)
+            {
+                temporaryInvicibility -= Time.deltaTime;
+            }
+            else
+            {
+                invicible = false;
+            }
         }
-        else
-        {
-            invicible = false;
-        }
-
     }
 
     void CheckForInput()
