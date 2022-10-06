@@ -1505,6 +1505,10 @@ PrefabInstance:
       value: UI
       objectReference: {fileID: 0}
     - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: sOInt
+      value: 
+      objectReference: {fileID: 11400000, guid: 981b26e50f1ed4c10bd77b7f2d8be54b, type: 2}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
       propertyPath: scoreName
       value: Score
       objectReference: {fileID: 0}
@@ -1531,6 +1535,10 @@ PrefabInstance:
     - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
       propertyPath: deathMaxScoreName
       value: High Score
+      objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: deathMaxScoreStart
+      value: 'Record: '
       objectReference: {fileID: 0}
     - target: {fileID: 267178372125007010, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
       propertyPath: m_RootOrder
@@ -1611,6 +1619,7 @@ MonoBehaviour:
   levelSpeed: 4
   isDead: 0
   score: 0
+  uppdateScoreDalay: 0.2
   pathLengthMax: 10
   pathLengthMin: 4
   pauseLengthMax: 6

@@ -13,11 +13,16 @@ public class UI : MonoBehaviour
     [SerializeField] private string deathScoreName;
     [SerializeField] private string deathScoreStart;
     [SerializeField] private string deathMaxScoreName;
+    [SerializeField] private string deathMaxScoreStart;
     private Slider healthSlider;
     [SerializeField] private string healthSliderName;
     private TextMeshProUGUI score;
     [SerializeField] private string scoreName;
     [SerializeField] private bool isInGameScene = false;
+
+    [SerializeField] private SOInt sOInt;
+
+    private int _storedScore;
 
     void Start()
     {
@@ -62,6 +67,7 @@ public class UI : MonoBehaviour
         }
         if(newScore != -1)
         {
+            _storedScore = newScore;
             score.text = newScore.ToString();
         }
     }
@@ -83,5 +89,11 @@ public class UI : MonoBehaviour
         }
 
         deathScreen.transform.Find(deathScoreName).GetComponent<TextMeshProUGUI>().text = deathScoreStart + score.text;
+
+        if(sOInt.Score < _storedScore)
+        {
+            sOInt.Score = _storedScore;
+        }
+        deathScreen.transform.Find(deathMaxScoreName).GetComponent<TextMeshProUGUI>().text = deathMaxScoreStart + sOInt.Score.ToString();
     }
 }

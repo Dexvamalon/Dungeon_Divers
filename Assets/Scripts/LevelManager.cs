@@ -12,6 +12,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private float levelSpeed = 1f;
     public bool isDead = false;
     public int score = 0;
+    private int delayedScore = 0;
+    [SerializeField] private float uppdateScoreDalay = 0;
+    private float temporary = 0;
     private UI ui;
 
     [Header("Pathway variables")]
@@ -70,6 +73,7 @@ public class LevelManager : MonoBehaviour
         paths = FindObjectOfType<PlayerMovement>().lanes;
         player = GameObject.FindGameObjectWithTag("Player");
         ui = FindObjectOfType<UI>();
+        temporary = uppdateScoreDalay;
         /*obstacleParent = new GameObject("Obstacle parent").transform;
         obstacleParentsList.Add(obstacleParent);
         Instantiate(prefabs[1], new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
@@ -90,11 +94,11 @@ public class LevelManager : MonoBehaviour
             {
                 Transform temporaryTransform;
                 temporaryTransform = obstacleParentsList[i].GetChild(j).Find("Sprite");
-                Debug.Log(temporaryTransform.gameObject.name);
+                //Debug.Log(temporaryTransform.gameObject.name);
 
                 Color color = temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color;
-                Debug.Log((temporaryTransform.position.y + temporaryTransform.localScale.y / 2) + " " + (temporaryTransform.position.y - temporaryTransform.localScale.y / 2));
-                Debug.Log((temporaryTransform.position.x + temporaryTransform.localScale.x / 2) + " " + (temporaryTransform.position.x - temporaryTransform.localScale.x / 2));
+                //Debug.Log((temporaryTransform.position.y + temporaryTransform.localScale.y / 2) + " " + (temporaryTransform.position.y - temporaryTransform.localScale.y / 2));
+                //Debug.Log((temporaryTransform.position.x + temporaryTransform.localScale.x / 2) + " " + (temporaryTransform.position.x - temporaryTransform.localScale.x / 2));
                 if (temporaryTransform.position.y + temporaryTransform.localScale.y / 2 >= player.transform.position.y &&
                     temporaryTransform.position.x + temporaryTransform.localScale.x / 2 >= player.transform.position.x &&
                     temporaryTransform.position.y - temporaryTransform.localScale.y / 2 <= player.transform.position.y &&
@@ -103,7 +107,7 @@ public class LevelManager : MonoBehaviour
 
                     color.a = seThroughOpacity;
                     temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
-                    Debug.Log("happened1");
+                    //Debug.Log("happened1");
                 }
                 else
                 {
@@ -115,7 +119,6 @@ public class LevelManager : MonoBehaviour
                                                                             temporaryTransform.parent.transform.position.y, 
                                                                             obstacleParentsList[i].GetChild(j).transform.position.y);
             }
-
             if (obstacleParentsList[i].position.y < deletePos)
             {
                 Destroy(obstacleParentsList[i].gameObject);
@@ -132,14 +135,25 @@ public class LevelManager : MonoBehaviour
         {
             PlacePathway();
         }
+
+        temporary -= Time.deltaTime;
+        if(temporary <= 0)
+        {
+            temporary += uppdateScoreDalay;
+            if (score > delayedScore)
+            {
+                delayedScore++;
+                ui.SetStats(-1, delayedScore);
+            }
+        }
     }
 
 
 
     void PlacePathway()
     {
-        score++;
-        ui.SetStats(-1, score);
+        //score++;
+        //ui.SetStats(-1, score);
         for(int i = 0; i < activePathwayDown.Length; i++)
         {
             activePathwayDown[i] = false;
@@ -263,6 +277,7 @@ public class LevelManager : MonoBehaviour
                                   obstacleVariantBlock[x][5] + " " +
                                   obstacleVariantBlock[x][6] + " " +
                                   obstacleVariantBlock[x][7]);*/
+            score++;
             FindAvilableYSpace(yPos - temporaryPrefabLength[x] / 2, yPos + temporaryPrefabLength[x] / 2, x);
 
             for (int i = 0; i < obscuredPath.Length; i++)
@@ -473,6 +488,7 @@ public class LevelManager : MonoBehaviour
                                   obstacleVariantBlock[x][6] + " " +
                                   obstacleVariantBlock[x][7]);*/
                         a++;
+                        score++;
                         //Debug.Log(yPos);
                         FindAvilableYSpace(yPos - temporaryPrefabLength[x] / 2, yPos + temporaryPrefabLength[x] / 2, x);
 
@@ -538,6 +554,7 @@ public class LevelManager : MonoBehaviour
                                   obstacleVariantBlock[x][6] + " " +
                                   obstacleVariantBlock[x][7]);*/
                     a++;
+                    score++;
                     //Debug.Log(yPos);
                     FindAvilableYSpace(yPos - temporaryPrefabLength[x] / 2, yPos + temporaryPrefabLength[x] / 2, x);
 
