@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float speedCap = 2f;
     [SerializeField] private float uppdateFrequency = 0.02f;
     private float temporaryUppdateFrequency;
-    private float currentLane = 0f;
+    private int currentLane = 1;
     [SerializeField] public float bounceLeeway = 0.1f;
     [SerializeField] private float invicibility = 1f;
     private float temporaryInvicibility = 1f;
@@ -56,6 +56,13 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb2d;
     private PlayerHealth playerHealth;
 
+
+    //todo fix jump and dropp
+
+
+
+    private bool goingLeft;
+
     private void Start()
     {
         GetLanes();
@@ -73,16 +80,15 @@ public class PlayerMovement : MonoBehaviour
         {
             lanes[i] = lanesGameObject[i].GetComponent<Transform>().position.x;
         }
-        Debug.Log(lanes[0] + "; " + lanes[1] + "; " + lanes[2] + "; " + lanes[3]);
+        //Debug.Log(lanes[0] + "; " + lanes[1] + "; " + lanes[2] + "; " + lanes[3]);
     }
 
     private void Update()
     {
-        if(!isDead)
+        if (!isDead)
         {
             CheckForInput();
             ExecuteInput();
-            Move();
             Jump();
             if (temporaryInvicibility > 0)
             {
@@ -94,18 +100,59 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+    private void FixedUpdate()
+    {
+        Move();
+    }
 
     void CheckForInput()
     {
-        pressedButtons[0] = Input.GetButton("Left");
-        pressedButtons[1] = Input.GetButton("MidLeft");
-        pressedButtons[2] = Input.GetButton("MidRight");
-        pressedButtons[3] = Input.GetButton("Right");
+        pressedButtons[0] = Input.GetButtonDown("Left");
+        pressedButtons[1] = Input.GetButtonDown("Right");
+        pressedButtons[2] = Input.GetButtonDown("Up");
+        pressedButtons[3] = Input.GetButtonDown("Down");
+        /*Debug.Log(pressedButtons[0] + " " +
+            pressedButtons[1] + " " +
+            pressedButtons[2] + " " +
+            pressedButtons[3]);*/
     }
 
     void ExecuteInput()
     {
-        for (int i = 0; i < pressedButtons.Length; i++)
+        if (pressedButtons[0] && currentLane > 0)
+        {
+            _targetLocation.x = lanes[currentLane-1];
+            currentLane--;
+            rb2d.velocity = new Vector2(-moveSpeed, rb2d.velocity.y);
+            goingLeft = true;
+            Debug.Log(currentLane);
+            Debug.Log(_targetLocation.x);
+        }
+        if (pressedButtons[1] && currentLane < 3)
+        {
+            _targetLocation.x = lanes[currentLane + 1];
+            currentLane++;
+            rb2d.velocity = new Vector2(moveSpeed, rb2d.velocity.y);
+            goingLeft = false;
+            Debug.Log(currentLane);
+            Debug.Log(_targetLocation.x);
+        }
+
+        if (goingLeft && transform.position.x < _targetLocation.x)
+        {
+            transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+        }
+        else if (!goingLeft && transform.position.x > _targetLocation.x)
+        {
+            transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+        }
+
+
+
+
+        /*for (int i = 0; i < pressedButtons.Length; i++)
         {
             if(temporaryJumpPressDelay[i] > 0)
             {
@@ -154,14 +201,14 @@ public class PlayerMovement : MonoBehaviour
                 case 1:
                     MoveBetweenLanes();
                     break;
-                /*case 2:
-                    DashBeweenLanes();
-                    Debug.Log("Dashing");
-                    break;*/
+                //case 2:
+                //    DashBeweenLanes();
+                //    Debug.Log("Dashing");
+                //    break;
                 default:
                     break;
             }
-        }
+        }*/
     }
 
     void MoveBetweenLanes()
@@ -173,7 +220,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 _targetLocation.x = lanes[i];
                 tempMoveSpeed = moveSpeed;
-                Debug.Log("Moving");
+                //Debug.Log("Moving");
             }
         }
         
@@ -212,7 +259,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        temporaryUppdateFrequency -= Time.deltaTime;
+        rb2d.velocity = new Vector2(rb2d.velocity.x * speedAccelerator, rb2d.velocity.y);
+        
+
+        
+
+        
+        
+
+
+        /*temporaryUppdateFrequency -= Time.deltaTime;
         if(temporaryUppdateFrequency < 0)
         {
             temporaryUppdateFrequency += uppdateFrequency;
@@ -256,10 +312,10 @@ public class PlayerMovement : MonoBehaviour
 
         if(transform.position.x == _targetLocation.x)
         {
-            currentLane = _targetLocation.x;
+            //currentLane = _targetLocation.x;
             shouldDash = false;
             jumpBrake = false;
-        }
+        }*/
     }
 
     private void Jump()
@@ -287,6 +343,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //if(!invicible)
         //{
+        /*
             List<float> rellevantStarts = new List<float>();
             List<float> rellevantEnds = new List<float>();
             List<int> x = new List<int>();
@@ -367,7 +424,7 @@ public class PlayerMovement : MonoBehaviour
                 canDashAgain = false;
                 _targetLocation.x = lanes[y];
                 tempMoveSpeed = moveSpeed;
-            }
+            }*///////////////////////////////////////////////////////////////////
         //}
         
 

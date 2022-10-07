@@ -24,7 +24,7 @@ public class PlayerHealth : MonoBehaviour
     {
         curHealth -= damage;
         ui.SetStats(curHealth, -1);
-        Debug.Log("Player took " + damage + " damage.");
+        //Debug.Log("Player took " + damage + " damage.");
         if(curHealth <= 0)
         {
             Death();

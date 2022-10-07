@@ -374,11 +374,11 @@ MonoBehaviour:
   groundInt: 6
   airInt: 9
   jumpPressDelay: 0.3
-  jumpHeight: 2
+  jumpHeight: 2.5
   startHeight: 0
-  jumpSpeed: 15
+  jumpSpeed: 17
   jumpSpeedDecelerator: 0.9
-  jumpSpeedAccelerator: 1.3
+  jumpSpeedAccelerator: 1.1
   dashSpeed: 0.0001
   dashCap: 300000
   dashAccelerator: 2
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfcc78a28b71948cbaf390226ce4756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 1000
   curHealth: 0
   deathScreen: {fileID: 889529970}
 --- !u!50 &92999147
@@ -423,18 +423,18 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92999140}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.0001
+  m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!1 &419873788
 GameObject:
@@ -1504,6 +1504,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007008, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
       propertyPath: sOInt
       value: 
@@ -1660,6 +1664,7 @@ MonoBehaviour:
   maxObstacles: 5
   maxObstaclesPause: 3
   seThroughOpacity: 0.5
+  maxObstacleOfType: 2
 --- !u!4 &888193223
 Transform:
   m_ObjectHideFlags: 0
