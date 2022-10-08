@@ -9,6 +9,7 @@ public class Info : MonoBehaviour
     [SerializeField] private float blockPosition = 0f;
     [SerializeField] public float damage = 1f;
     [SerializeField] private float length = 1f;
+    [SerializeField] private int type;
 
     public float GetLength()
     {
@@ -23,5 +24,10 @@ public class Info : MonoBehaviour
     public float GetBlockPosition()
     {
         return blockPosition;
+    }
+
+    public int GetObstacleType()
+    {
+        return type;
     }
 }

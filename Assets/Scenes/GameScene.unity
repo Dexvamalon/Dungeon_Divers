@@ -377,8 +377,12 @@ MonoBehaviour:
   jumpHeight: 2.5
   startHeight: 0
   jumpSpeed: 17
-  jumpSpeedDecelerator: 0.9
+  dropSpeed: 5
+  uppTimer: 0.55
+  downTimer: 0.55
+  jumpSpeedDecelerator: 0.89
   jumpSpeedAccelerator: 1.1
+  fastFallMultiplyer: 4
   dashSpeed: 0.0001
   dashCap: 300000
   dashAccelerator: 2
@@ -1620,15 +1624,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacles: []
-  levelSpeed: 4
+  levelSpeed: 10
   isDead: 0
   score: 0
   uppdateScoreDalay: 0.2
   pathLengthMax: 10
   pathLengthMin: 4
-  pauseLengthMax: 6
-  pauseLengthMin: 4
-  placeChance: 4
+  pauseLengthMax: 4
+  pauseLengthMin: 2
+  placeChance: 20
   pathwayStructure1: 01000100
   pathwayStructure2: 01000000
   pathwayStructure3: 00000100
@@ -1661,10 +1665,11 @@ MonoBehaviour:
   - {fileID: 2111364889000857542, guid: c52195e44e11a4a2786bdb38989c153c, type: 3}
   placePos: 10
   deletePos: -10
-  maxObstacles: 5
+  maxObstacles: 10
   maxObstaclesPause: 3
   seThroughOpacity: 0.5
-  maxObstacleOfType: 2
+  maxObstacleOfType: 1
+  maxOfType: 020000000400000001000000
 --- !u!4 &888193223
 Transform:
   m_ObjectHideFlags: 0

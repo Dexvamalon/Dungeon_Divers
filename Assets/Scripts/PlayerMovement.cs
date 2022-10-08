@@ -16,8 +16,8 @@ public class PlayerMovement : MonoBehaviour
     private float tempMoveSpeed;
     private Vector2 _targetLocation = new Vector2();
     [SerializeField] private float speedAccelerator = 1.2f;
-    [SerializeField] private float speedDecelerator = 1.2f;
-    [SerializeField] private float speedCap = 2f;
+    //[SerializeField] private float speedDecelerator = 1.2f;
+    //[SerializeField] private float speedCap = 2f;
     [SerializeField] private float uppdateFrequency = 0.02f;
     private float temporaryUppdateFrequency;
     private int currentLane = 1;
@@ -30,26 +30,31 @@ public class PlayerMovement : MonoBehaviour
     private bool isInAir = false;
     [SerializeField] private int groundInt = 6;
     [SerializeField] private int airInt = 9;
-    [SerializeField] private float jumpPressDelay = 1f;
+    //[SerializeField] private float jumpPressDelay = 1f;
     private float[] temporaryJumpPressDelay = new float[4];
     [SerializeField] private float jumpHeight = 1f;
     [SerializeField] private float startHeight = 0f;
     [SerializeField] private float jumpSpeed = 1f;
+    [SerializeField] private float dropSpeed = 1f;
     private float tempJumpSpeed;
     private bool goingUpp = false;
+    [SerializeField] private float uppTimer = 1f;
+    [SerializeField] private float downTimer = 1f;
+    private float tempTimer;
     private bool[] newInput = new bool[4];
     [SerializeField] private float jumpSpeedDecelerator = 0.5f;
     [SerializeField] private float jumpSpeedAccelerator = 1.5f;
-    private bool jumpBrake = false;
+    [SerializeField] private float fastFallMultiplyer = 1f;
+    //private bool jumpBrake = false;
 
     [Header("Dashing")]
-    private bool shouldDash = false;
-    [SerializeField] private float dashSpeed = 1f;
-    private float tempDashSpeed = 1f;
-    [SerializeField] private float dashCap = 2f;
-    [SerializeField] private float dashAccelerator = 1.5f;
-    [SerializeField] private float dashDecelerator = 0.5f;
-    private bool canDashAgain = true;
+    //private bool shouldDash = false;
+    //[SerializeField] private float dashSpeed = 1f;
+    //private float tempDashSpeed = 1f;
+    //[SerializeField] private float dashCap = 2f;
+    //[SerializeField] private float dashAccelerator = 1.5f;
+    //[SerializeField] private float dashDecelerator = 0.5f;
+    //private bool canDashAgain = true;
     public bool isDead = false;
 
     [Header("References")]
@@ -89,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
         {
             CheckForInput();
             ExecuteInput();
-            Jump();
+            //Jump();
             if (temporaryInvicibility > 0)
             {
                 temporaryInvicibility -= Time.deltaTime;
@@ -98,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 invicible = false;
             }
+            
         }
     }
     private void FixedUpdate()
@@ -119,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ExecuteInput()
     {
+        //left
         if (pressedButtons[0] && currentLane > 0)
         {
             _targetLocation.x = lanes[currentLane-1];
@@ -128,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
         }
+        //right
         if (pressedButtons[1] && currentLane < 3)
         {
             _targetLocation.x = lanes[currentLane + 1];
@@ -137,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
         }
-
+        
         if (goingLeft && transform.position.x < _targetLocation.x)
         {
             transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
@@ -148,6 +156,59 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
             rb2d.velocity = new Vector2(0, rb2d.velocity.y);
         }
+
+        //jump
+        if (pressedButtons[2] && !isInAir)
+        {
+            _targetLocation.y = jumpHeight;
+            isInAir = true;
+            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+            goingUpp = true;
+            tempTimer = uppTimer;
+            gameObject.layer = airInt;
+        }
+        Debug.Log(isInAir);
+        if (isInAir)
+        {
+            tempTimer -= Time.deltaTime;
+            if (tempTimer <= 0)
+            {
+                transform.position = new Vector3(transform.position.x, _targetLocation.y, transform.position.z);
+
+                if (goingUpp)
+                {
+                    _targetLocation.y = startHeight;
+                    rb2d.velocity = new Vector2(rb2d.velocity.x, -dropSpeed);
+                    goingUpp = false;
+                    tempTimer = downTimer;
+                }
+            }
+        }
+
+        if(transform.position.y > jumpHeight || transform.position.y < startHeight)
+        {
+            transform.position = new Vector3(transform.position.x, _targetLocation.y, transform.position.z);
+            rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+            if(!goingUpp)
+            {
+                isInAir = false;
+                gameObject.layer = groundInt;
+            }
+        }
+        //fast fall
+        if (pressedButtons[3])
+        {
+            if(goingUpp)
+            {
+                _targetLocation.y = startHeight;
+                rb2d.velocity = new Vector2(rb2d.velocity.x, -dropSpeed);
+                goingUpp = false;
+                tempTimer = downTimer;
+            }
+            rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * fastFallMultiplyer);
+        }
+
+
 
 
 
@@ -213,7 +274,7 @@ public class PlayerMovement : MonoBehaviour
 
     void MoveBetweenLanes()
     {
-
+        /*
         for (int i = 0; i < pressedButtons.Length; i++)
         {
             if (pressedButtons[i] && !shouldDash && lanes[i] != _targetLocation.x)
@@ -222,12 +283,13 @@ public class PlayerMovement : MonoBehaviour
                 tempMoveSpeed = moveSpeed;
                 //Debug.Log("Moving");
             }
-        }
+        }*/
         
     }
 
     void DashBeweenLanes()
     {
+        /*
         if(!shouldDash)
         {
             for (int i = 0; i < pressedButtons.Length; i++)
@@ -254,12 +316,21 @@ public class PlayerMovement : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
     private void Move()
     {
         rb2d.velocity = new Vector2(rb2d.velocity.x * speedAccelerator, rb2d.velocity.y);
+
+        if(goingUpp)
+        {
+            rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * jumpSpeedDecelerator);
+        }
+        else
+        {
+            rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * jumpSpeedAccelerator);
+        }
         
 
         
@@ -320,6 +391,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        /*
         if(isInAir && !jumpBrake)
         {
             if(transform.position.y != jumpHeight && goingUpp)
@@ -336,14 +408,14 @@ public class PlayerMovement : MonoBehaviour
                 isInAir = false;
                 gameObject.layer = groundInt;
             }
-        }
+        }*/
     }
 
     public void BouncePlayer(List<GameObject> obstacles)
     {
-        //if(!invicible)
-        //{
-        /*
+        if(!invicible)
+        {
+        
             List<float> rellevantStarts = new List<float>();
             List<float> rellevantEnds = new List<float>();
             List<int> x = new List<int>();
@@ -421,11 +493,24 @@ public class PlayerMovement : MonoBehaviour
                 }
                 Debug.Log(lanes[y]);
 
-                canDashAgain = false;
-                _targetLocation.x = lanes[y];
-                tempMoveSpeed = moveSpeed;
-            }*///////////////////////////////////////////////////////////////////
-        //}
+                //canDashAgain = false;
+                if(transform.position.x < lanes[y])
+                {
+                    _targetLocation.x = lanes[y];
+                    currentLane = y;
+                    rb2d.velocity = new Vector2(moveSpeed, rb2d.velocity.y);
+                    goingLeft = false;
+                }
+                else if (transform.position.x > lanes[y])
+                {
+                    _targetLocation.x = lanes[y];
+                    currentLane = y;
+                    rb2d.velocity = new Vector2(-moveSpeed, rb2d.velocity.y);
+                    goingLeft = true;
+                }
+            //tempMoveSpeed = moveSpeed;
+            }
+        }
         
 
 

@@ -142,6 +142,7 @@ MonoBehaviour:
   blockPosition: -3
   damage: 1
   length: 4
+  type: 1
 --- !u!1 &5853546419995288637
 GameObject:
   m_ObjectHideFlags: 0
