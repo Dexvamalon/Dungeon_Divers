@@ -68,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool goingLeft;
 
+    bool first = true;
+
     private void Start()
     {
         GetLanes();
@@ -130,10 +132,16 @@ public class PlayerMovement : MonoBehaviour
         {
             _targetLocation.x = lanes[currentLane-1];
             currentLane--;
+            if(first)
+            {
+                _targetLocation.x = lanes[1];
+                currentLane = 1;
+            }
             rb2d.velocity = new Vector2(-moveSpeed, rb2d.velocity.y);
             goingLeft = true;
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
+            first = false;
         }
         //right
         if (pressedButtons[1] && currentLane < 3)
@@ -144,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
             goingLeft = false;
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
+            first = false;
         }
         
         if (goingLeft && transform.position.x < _targetLocation.x)
@@ -167,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
             tempTimer = uppTimer;
             gameObject.layer = airInt;
         }
-        Debug.Log(isInAir);
+        //Debug.Log(isInAir);
         if (isInAir)
         {
             tempTimer -= Time.deltaTime;

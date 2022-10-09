@@ -365,15 +365,12 @@ MonoBehaviour:
   - 0
   moveSpeed: 5
   speedAccelerator: 2
-  speedDecelerator: 0.5
-  speedCap: 5
   uppdateFrequency: 0.02
   bounceLeeway: 0.1
   invicibility: 1
   invicible: 0
   groundInt: 6
   airInt: 9
-  jumpPressDelay: 0.3
   jumpHeight: 2.5
   startHeight: 0
   jumpSpeed: 17
@@ -383,10 +380,6 @@ MonoBehaviour:
   jumpSpeedDecelerator: 0.89
   jumpSpeedAccelerator: 1.1
   fastFallMultiplyer: 4
-  dashSpeed: 0.0001
-  dashCap: 300000
-  dashAccelerator: 2
-  dashDecelerator: 1
   isDead: 0
 --- !u!58 &92999145
 CircleCollider2D:
@@ -416,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfcc78a28b71948cbaf390226ce4756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1000
+  maxHealth: 3
   curHealth: 0
   deathScreen: {fileID: 889529970}
 --- !u!50 &92999147
@@ -715,7 +708,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -739,7 +732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -100}
+  m_LocalPosition: {x: 0, y: 7, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1624,9 +1617,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacles: []
-  levelSpeed: 10
+  levelSpeed: 15
   isDead: 0
-  score: 0
+  score: 100
   uppdateScoreDalay: 0.2
   pathLengthMax: 10
   pathLengthMin: 4
@@ -1670,6 +1663,8 @@ MonoBehaviour:
   seThroughOpacity: 0.5
   maxObstacleOfType: 1
   maxOfType: 020000000400000001000000
+  levelDificulty: 1
+  cameraZoomSpeed: 1
 --- !u!4 &888193223
 Transform:
   m_ObjectHideFlags: 0

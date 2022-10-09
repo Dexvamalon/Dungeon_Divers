@@ -72,6 +72,13 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<int> maxOfType = new List<int>();
 
+    List<bool> type0 = new List<bool>();
+    List<bool> type1 = new List<bool>();
+    List<bool> type2 = new List<bool>();
+
+    [SerializeField] private float levelDificulty = 1f;
+    [SerializeField] private float cameraZoomSpeed = 1f;
+
 
 
 
@@ -85,11 +92,19 @@ public class LevelManager : MonoBehaviour
         obstacleParentsList.Add(obstacleParent);
         Instantiate(prefabs[1], new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
         */
+        Camera.main.orthographicSize = 5;
+        Camera.main.transform.position = new Vector3(0, 2, -100);
 
     }
 
     void Update()
     {
+        if(score > 50)
+        {
+            levelDificulty = (float)score / 50;
+            Debug.Log(levelDificulty + " " + ((float)score / 50));
+        }
+
         for(int i = 0; i < obstacleParentsList.Count; i++)
         {
             if(!isDead)
@@ -153,6 +168,29 @@ public class LevelManager : MonoBehaviour
                 ui.SetStats(-1, delayedScore);
             }
         }
+        float cameraOrthograpicSize = 1f;
+        float cameraPosition = 1f;
+        bool canZoom = false;
+
+        cameraOrthograpicSize = 4.5f + levelDificulty / 2;
+        cameraPosition = 1.5f + levelDificulty / 2;
+        
+
+        if (Camera.main.orthographicSize + 1 < cameraOrthograpicSize || canZoom)
+        {
+            canZoom = true;
+            Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, cameraOrthograpicSize, cameraZoomSpeed * Time.deltaTime);
+        }
+        if(Camera.main.orthographicSize >= cameraOrthograpicSize)
+        {
+            canZoom = false;
+        }
+        if (Camera.main.transform.position.y < cameraPosition)
+        {
+            Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y + Time.deltaTime/5, -100);
+        }
+        
+        levelSpeed = 6 + levelDificulty;
     }
 
 
@@ -249,6 +287,10 @@ public class LevelManager : MonoBehaviour
         List<float> temporaryEnds = new List<float>();
         List<int> intToRemove = new List<int>();
 
+        List<int> temp = new List<int>();
+        List<int> temp1 = new List<int>();
+        List<int> temp2 = new List<int>();
+
         for (int i = 0; i < ends.Length; i++)
         {
             ends[i] = new List<float>();
@@ -271,12 +313,51 @@ public class LevelManager : MonoBehaviour
         {
             //place them
             //pick random of the available ones
-            int x = Random.Range(0, temporaryPrefabVariants.Count);
+            int x = 0;
+            temp = new List<int>();
+            temp1 = new List<int>();
+            temp2 = new List<int>();
+            for (int b = 0; b < type0.Count; b++)
+            {
+                if (type0[b])
+                {
+                    temp.Add(b);
+                }
+                if (type1[b])
+                {
+                    temp1.Add(b);
+                }
+                if (type2[b])
+                {
+                    temp2.Add(b);
+                }
+            }
+            if (temp1.Count > 0)
+            {
+                x = Random.Range(0, temp1.Count);
+                x = temp1[x];
+            }
+            else if (temp.Count > 0)
+            {
+                x = Random.Range(0, temp.Count);
+                x = temp[x];
+            }
+            else if (temp2.Count > 0)
+            {
+                x = Random.Range(0, temp2.Count);
+                x = temp2[x];
+            }
+            else
+            {
+                //Debug.Log("x nothing");
+                return;
+            }
 
             yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                 obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
 
             Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
+            //Debug.Log("instantiate " + temporaryPrefabType[x]);
             /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +
                                   obstacleVariantBlock[x][1] + " " +
                                   obstacleVariantBlock[x][2] + " " +
@@ -316,7 +397,8 @@ public class LevelManager : MonoBehaviour
             intToRemove = new List<int>();
             if (typeCount[temporaryPrefabType[x]] >= maxOfType[temporaryPrefabType[x]])
             {
-                for(int i = 0; i < obstacleVariantBlock.Count; i++)
+                //Debug.Log("remove " + temporaryPrefabType[x]);
+                for (int i = 0; i < obstacleVariantBlock.Count; i++)
                 {
                     if (temporaryPrefabType[i] == temporaryPrefabType[x])
                     {
@@ -336,7 +418,10 @@ public class LevelManager : MonoBehaviour
                 obstacleVariantBlock.RemoveAt(intToRemove[i]);
                 temporaryPrefabLength.RemoveAt(intToRemove[i]);
                 amountPlacedOfObstacle.RemoveAt(intToRemove[i]);
-                temporaryPrefabType.Remove(intToRemove[i]);
+                temporaryPrefabType.RemoveAt(intToRemove[i]);
+                type0.RemoveAt(intToRemove[i]);
+                type1.RemoveAt(intToRemove[i]);
+                type2.RemoveAt(intToRemove[i]);
             }
 
 
@@ -364,7 +449,45 @@ public class LevelManager : MonoBehaviour
                 usedStarts = new List<float>();
 
                 //pick random other that would work
-                x = Random.Range(0, temporaryPrefabVariants.Count);
+                
+                temp = new List<int>();
+                temp1 = new List<int>();
+                temp2 = new List<int>();
+                for (int b = 0; b < type0.Count; b++)
+                {
+                    if (type0[b])
+                    {
+                        temp.Add(b);
+                    }
+                    if(type1[b])
+                    {
+                        temp1.Add(b);
+                    }
+                    if (type2[b])
+                    {
+                        temp2.Add(b);
+                    }
+                }
+                if (temp1.Count > 0)
+                {
+                    x = Random.Range(0, temp1.Count);
+                    x = temp1[x];
+                }
+                else if (temp.Count > 0)
+                {
+                    x = Random.Range(0, temp.Count);
+                    x = temp[x];
+                }
+                else if (temp2.Count > 0)
+                {
+                    x = Random.Range(0, temp2.Count);
+                    x = temp2[x];
+                }
+                else
+                {
+                    //Debug.Log("x nothing");
+                    return;
+                }
                 for (int i = 0; i < obscuredPath.Length; i++)
                 {
                     if (obstacleVariantBlock[x][i] && obscuredPath[i])
@@ -517,6 +640,7 @@ public class LevelManager : MonoBehaviour
                         yPos = Random.Range(usedStarts[z] + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                             usedEnds[z] - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
                         Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
+                        //Debug.Log("instantiate " + temporaryPrefabType[x]);
                         /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +
                                   obstacleVariantBlock[x][1] + " " +
                                   obstacleVariantBlock[x][2] + " " +
@@ -543,6 +667,7 @@ public class LevelManager : MonoBehaviour
                         intToRemove = new List<int>();
                         if (typeCount[temporaryPrefabType[x]] >= maxOfType[temporaryPrefabType[x]])
                         {
+                            //Debug.Log("remove " + temporaryPrefabType[x]);
                             for (int i = 0; i < obstacleVariantBlock.Count; i++)
                             {
                                 if (temporaryPrefabType[i] == temporaryPrefabType[x])
@@ -563,7 +688,10 @@ public class LevelManager : MonoBehaviour
                             obstacleVariantBlock.RemoveAt(intToRemove[i]);
                             temporaryPrefabLength.RemoveAt(intToRemove[i]);
                             amountPlacedOfObstacle.RemoveAt(intToRemove[i]);
-                            temporaryPrefabType.Remove(intToRemove[i]);
+                            temporaryPrefabType.RemoveAt(intToRemove[i]);
+                            type0.RemoveAt(intToRemove[i]);
+                            type1.RemoveAt(intToRemove[i]);
+                            type2.RemoveAt(intToRemove[i]);
                         }
 
                         if (temporaryPrefabVariants.Count <= 0)
@@ -579,6 +707,9 @@ public class LevelManager : MonoBehaviour
                         temporaryPrefabLength.RemoveAt(x);
                         amountPlacedOfObstacle.RemoveAt(x);
                         temporaryPrefabType.RemoveAt(x);
+                        type0.RemoveAt(x);
+                        type1.RemoveAt(x);
+                        type2.RemoveAt(x);
                     }
 
                     if (temporaryPrefabVariants.Count <= 0)
@@ -619,6 +750,7 @@ public class LevelManager : MonoBehaviour
                     yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                     obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
                     Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
+                    //Debug.Log("instantiate " + temporaryPrefabType[x]);
                     /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +
                                   obstacleVariantBlock[x][1] + " " +
                                   obstacleVariantBlock[x][2] + " " +
@@ -646,6 +778,7 @@ public class LevelManager : MonoBehaviour
                     intToRemove = new List<int>();
                     if (typeCount[temporaryPrefabType[x]] >= maxOfType[temporaryPrefabType[x]])
                     {
+                        //Debug.Log("remove " + temporaryPrefabType[x]);
                         for (int i = 0; i < obstacleVariantBlock.Count; i++)
                         {
                             if (temporaryPrefabType[i] == temporaryPrefabType[x])
@@ -666,7 +799,10 @@ public class LevelManager : MonoBehaviour
                         obstacleVariantBlock.RemoveAt(intToRemove[i]);
                         temporaryPrefabLength.RemoveAt(intToRemove[i]);
                         amountPlacedOfObstacle.RemoveAt(intToRemove[i]);
-                        temporaryPrefabType.Remove(intToRemove[i]);
+                        temporaryPrefabType.RemoveAt(intToRemove[i]);
+                        type0.RemoveAt(intToRemove[i]);
+                        type1.RemoveAt(intToRemove[i]);
+                        type2.RemoveAt(intToRemove[i]);
                     }
 
                     if (temporaryPrefabVariants.Count <= 0)
@@ -821,6 +957,9 @@ public class LevelManager : MonoBehaviour
         amountPlacedOfObstacle = new List<int>();
         temporaryPrefabType = new List<int>();
         typeCount = new List<int>() { 0, 0, 0 };
+        type0 = new List<bool>();
+        type1 = new List<bool>();
+        type2 = new List<bool>();
 
         for (int i = 0; i < prefabs.Count; i++)
         {
@@ -829,27 +968,28 @@ public class LevelManager : MonoBehaviour
             temporaryPrefabVariants.Add(prefabs[i]);
             amountPlacedOfObstacle.Add(0);
             temporaryPrefabType.Add(prefabs[i].GetComponent<Info>().GetObstacleType());
+            type0.Add(false);
+            type1.Add(false);
+            type2.Add(false);
         }
-        ///////////////////////////////////////////////////////// todo remove this!
-        List<int> intToRemove = new List<int>();
-        for (int i = 0; i < obstacleVariantBlock.Count; i++)
+        for(int i = 0; i < temporaryPrefabType.Count; i++)
         {
-            if (temporaryPrefabType[i] == 2)
+            switch (temporaryPrefabType[i])
             {
-                intToRemove.Add(i);
+                case 0:
+                    type0[i] = true;
+                    break;
+                case 1:
+                    type1[i] = true;
+                    break;
+                case 2:
+                    type2[i] = true;
+                    break;
+                default:
+                    break;
+
             }
         }
-        intToRemove.Sort();
-        intToRemove.Reverse();
-        for (int i = 0; i < intToRemove.Count; i++)
-        {
-            temporaryPrefabVariants.RemoveAt(intToRemove[i]);
-            obstacleVariantBlock.RemoveAt(intToRemove[i]);
-            temporaryPrefabLength.RemoveAt(intToRemove[i]);
-            amountPlacedOfObstacle.RemoveAt(intToRemove[i]);
-            temporaryPrefabType.Remove(intToRemove[i]);
-        }
-        /////////////////////////////////////////////////////////////
         for (int i = 0; i < temporaryPrefabVariants.Count; i++)
         {
             if(temporaryPrefabLength[i] > pathLength)
@@ -859,6 +999,9 @@ public class LevelManager : MonoBehaviour
                 temporaryPrefabLength.RemoveAt(i);
                 amountPlacedOfObstacle.RemoveAt(i);
                 temporaryPrefabType.RemoveAt(i);
+                type0.RemoveAt(i);
+                type1.RemoveAt(i);
+                type2.RemoveAt(i);
                 i--;
             }
         }
@@ -876,6 +1019,9 @@ public class LevelManager : MonoBehaviour
                         temporaryPrefabLength.RemoveAt(x);
                         amountPlacedOfObstacle.RemoveAt(x);
                         temporaryPrefabType.RemoveAt(x);
+                        type0.RemoveAt(x);
+                        type1.RemoveAt(x);
+                        type2.RemoveAt(x);
                         x--;
                     }
                 }
@@ -895,6 +1041,9 @@ public class LevelManager : MonoBehaviour
                         temporaryPrefabLength.RemoveAt(x);
                         amountPlacedOfObstacle.RemoveAt(x);
                         temporaryPrefabType.RemoveAt(x);
+                        type0.RemoveAt(x);
+                        type1.RemoveAt(x);
+                        type2.RemoveAt(x);
                         x--;
                     }
                 }
