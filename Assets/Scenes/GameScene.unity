@@ -813,7 +813,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4245283, g: 0.22227661, b: 0.25701278, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1076,7 +1076,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4245283, g: 0.22227661, b: 0.25701278, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1648,8 +1648,6 @@ MonoBehaviour:
   - {fileID: 2111364889000857542, guid: cfa7c4ec648444d6e87d3bab3f40c0a3, type: 3}
   - {fileID: 5344088102768354269, guid: b79a89f4002404e6db9df5ecb02831ed, type: 3}
   - {fileID: 5344088102768354269, guid: 51f064ebcaa014fa9b44e4bffd1760e8, type: 3}
-  - {fileID: 2111364889000857542, guid: 7313386adc9cf4e14858ba0806a40af3, type: 3}
-  - {fileID: 9041539053344198951, guid: c6abf79e806c045bc95315d8400754d3, type: 3}
   - {fileID: 2111364889000857542, guid: 43b927df6286e4636b916a8ecdda2f28, type: 3}
   - {fileID: 2111364889000857542, guid: fd0e10cec73b95442a1cf08fb4622623, type: 3}
   - {fileID: 369342422853119569, guid: 613e22fb23c1a9849beaf3a76087e97a, type: 3}
@@ -1953,7 +1951,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -100
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.9056604, g: 0.6279815, b: 0.64037764, a: 1}
+  m_Color: {r: 0.4056604, g: 0.17412782, b: 0.18391088, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2392,7 +2390,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4245283, g: 0.22227661, b: 0.25701278, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2511,7 +2509,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4245283, g: 0.22227661, b: 0.25701278, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
