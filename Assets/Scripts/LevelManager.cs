@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 public class LevelManager : MonoBehaviour
 {
 
     [SerializeField] private List<Transform> obstacles = new List<Transform>();
-    [SerializeField] private float levelSpeed = 1f;
+    [SerializeField] public float levelSpeed = 1f;
     public bool isDead = false;
     public int score = 0;
     private int delayedScore = 0;

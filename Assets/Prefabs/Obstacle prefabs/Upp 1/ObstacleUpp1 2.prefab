@@ -75,9 +75,13 @@ PrefabInstance:
       propertyPath: m_FlipX
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8286258445497121269, guid: fd0e10cec73b95442a1cf08fb4622623, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8464018791495749993, guid: fd0e10cec73b95442a1cf08fb4622623, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd0e10cec73b95442a1cf08fb4622623, type: 3}

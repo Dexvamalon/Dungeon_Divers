@@ -81,12 +81,10 @@ public class PlayerMovement : MonoBehaviour
 
     void GetLanes()
     {
-        GameObject[] lanesGameObject;
-        lanesGameObject = GameObject.FindGameObjectsWithTag("Lane");
-        for (int i = 0; i < lanesGameObject.Length; i++)
-        {
-            lanes[i] = lanesGameObject[i].GetComponent<Transform>().position.x;
-        }
+        lanes[0] = -2.7f;
+        lanes[1] = -0.9f;
+        lanes[2] = 0.9f;
+        lanes[3] = 2.7f;
         //Debug.Log(lanes[0] + "; " + lanes[1] + "; " + lanes[2] + "; " + lanes[3]);
     }
 
