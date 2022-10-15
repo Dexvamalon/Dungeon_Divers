@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     private Rigidbody2D rb2d;
     private PlayerHealth playerHealth;
+    private UI ui;
 
 
     //todo fix jump and dropp
@@ -96,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         GetLanes();
+        ui = FindObjectOfType<UI>();
         rb2d = GetComponent<Rigidbody2D>();
         playerHealth = GetComponent<PlayerHealth>();
         _targetLocation = transform.position;
@@ -127,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 invicible = false;
                 animator.SetBool("IsInvicible", false);
+                ui.IsInvicible = false;
             }
             
         }
@@ -637,6 +640,7 @@ public class PlayerMovement : MonoBehaviour
     {
         temporaryInvicibility = invicibility;
         invicible = true;
+        ui.IsInvicible = true;
         animator.SetBool("IsInvicible", true);
     }
 }

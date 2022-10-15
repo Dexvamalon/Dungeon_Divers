@@ -19,6 +19,23 @@ public class UI : MonoBehaviour
     private TextMeshProUGUI score;
     [SerializeField] private string scoreName;
     [SerializeField] private bool isInGameScene = false;
+    private bool isInvicible;
+    public bool IsInvicible
+    {
+        get { return isInvicible; }   
+        set { isInvicible = value;
+            if (isInvicible)
+            {
+                SetSliderColor(invicibilityColor);
+            }
+            else
+            {
+                SetSliderColor(defaultColor);
+            }
+        }
+    }
+    [SerializeField] Color invicibilityColor = new Color();
+    Color defaultColor;
 
     [SerializeField] private SOInt sOInt;
 
@@ -27,6 +44,12 @@ public class UI : MonoBehaviour
     void Start()
     {
         FindObjects();
+        defaultColor = healthSlider.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color;
+    }
+
+    void SetSliderColor(Color col)
+    {
+        healthSlider.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = col;
     }
 
     private void FindObjects()

@@ -1662,6 +1662,22 @@ PrefabInstance:
       propertyPath: deathMaxScoreStart
       value: 'Record: '
       objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: invicibilityColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: invicibilityColor.b
+      value: 0.6603774
+      objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: invicibilityColor.g
+      value: 0.5801923
+      objectReference: {fileID: 0}
+    - target: {fileID: 267178372125007009, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
+      propertyPath: invicibilityColor.r
+      value: 0.4579032
+      objectReference: {fileID: 0}
     - target: {fileID: 267178372125007010, guid: 1763bf6cbd9a3438eaf14d427985f51d, type: 3}
       propertyPath: m_RootOrder
       value: 7
