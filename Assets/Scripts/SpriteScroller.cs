@@ -10,6 +10,7 @@ public class SpriteScroller : MonoBehaviour
     Material material;
 
     LevelManager levelManager;
+    public bool var = true;
 
     void Awake()
     {
@@ -19,7 +20,10 @@ public class SpriteScroller : MonoBehaviour
 
     void Update()
     {
-        offset = moveSpeed * levelManager.levelSpeed * Time.deltaTime / 1573 * 115;
-        material.mainTextureOffset += offset;
+        if(var)
+        {
+            offset = moveSpeed * levelManager.levelSpeed * Time.deltaTime / 1573 * 115;
+            material.mainTextureOffset += offset;
+        }
     }
 }

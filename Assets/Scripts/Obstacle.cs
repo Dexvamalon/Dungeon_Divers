@@ -27,6 +27,12 @@ public class Obstacle : MonoBehaviour
             float leeway = collision.GetComponent<PlayerMovement>().bounceLeeway;
             BoxCollider2D boxCol2d = GetComponent<BoxCollider2D>();
 
+            if (playerPosition.x > transform.position.x - (transform.lossyScale.x * boxCol2d.size.x) / 2 + boxCol2d.offset.x &&
+                playerPosition.x < transform.position.x + (transform.lossyScale.x * boxCol2d.size.x) / 2 + boxCol2d.offset.x && !collision.GetComponent<PlayerMovement>().Invicible)
+            {
+                collision.GetComponent<PlayerHealth>().TakeDamage(info.damage);
+            }
+
             if (playerPosition.y + leeway > transform.position.y - info.GetLength() / 2 && playerPosition.y - leeway < transform.position.y + info.GetLength()/2)
             {
                 List<GameObject> obstacles = new List<GameObject>();
@@ -46,12 +52,6 @@ public class Obstacle : MonoBehaviour
                 }
 
                 collision.GetComponent<PlayerMovement>().BouncePlayer(obstacles);
-            }
-
-            if(playerPosition.x > transform.position.x - (transform.lossyScale.x * boxCol2d.size.x) / 2 + boxCol2d.offset.x &&
-                playerPosition.x < transform.position.x + (transform.lossyScale.x * boxCol2d.size.x) / 2 + boxCol2d.offset.x && !collision.GetComponent<PlayerMovement>().invicible)
-            {
-                collision.GetComponent<PlayerHealth>().TakeDamage(info.damage);
             }
         }
     }

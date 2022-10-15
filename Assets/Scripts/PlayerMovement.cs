@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Lanes")]
@@ -24,10 +25,30 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float bounceLeeway = 0.1f;
     [SerializeField] private float invicibility = 1f;
     private float temporaryInvicibility = 1f;
-    public bool invicible = false;
+
+    private bool invicible;
+    public bool Invicible
+    {
+        get { return invicible; }
+    }
 
     [Header("Jumping")]
     private bool isInAir = false;
+    public bool IsInAir
+    {
+        get { return isInAir; }
+        set { isInAir = value;
+            if (value == true)
+            {
+                animator.SetBool("IsJumping", true);
+            }
+            else
+            {
+                animator.SetBool("IsJumping", false);
+            }
+        }
+    }
+
     [SerializeField] private int groundInt = 6;
     [SerializeField] private int airInt = 9;
     //[SerializeField] private float jumpPressDelay = 1f;
@@ -70,6 +91,8 @@ public class PlayerMovement : MonoBehaviour
 
     bool first = true;
 
+    private Animator animator;
+
     private void Start()
     {
         GetLanes();
@@ -77,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         playerHealth = GetComponent<PlayerHealth>();
         _targetLocation = transform.position;
         temporaryUppdateFrequency = uppdateFrequency;
+        animator = GetComponent<Animator>();
     }
 
     void GetLanes()
@@ -102,8 +126,50 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 invicible = false;
+                animator.SetBool("IsInvicible", false);
             }
             
+        }
+        else
+        {
+            if (goingLeft && transform.position.x < _targetLocation.x)
+            {
+                transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
+                rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+            }
+            else if (!goingLeft && transform.position.x > _targetLocation.x)
+            {
+                transform.position = new Vector3(_targetLocation.x, transform.position.y, transform.position.z);
+                rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+            }
+
+            if (IsInAir)
+            {
+                tempTimer -= Time.deltaTime;
+                if (tempTimer <= 0)
+                {
+                    transform.position = new Vector3(transform.position.x, _targetLocation.y, transform.position.z);
+
+                    if (goingUpp)
+                    {
+                        _targetLocation.y = startHeight;
+                        rb2d.velocity = new Vector2(rb2d.velocity.x, -dropSpeed);
+                        goingUpp = false;
+                        tempTimer = downTimer;
+                    }
+                }
+            }
+
+            if (transform.position.y > jumpHeight || transform.position.y < startHeight)
+            {
+                transform.position = new Vector3(transform.position.x, _targetLocation.y, transform.position.z);
+                rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+                if (!goingUpp)
+                {
+                    IsInAir = false;
+                    gameObject.layer = groundInt;
+                }
+            }
         }
     }
     private void FixedUpdate()
@@ -165,17 +231,17 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //jump
-        if (pressedButtons[2] && !isInAir)
+        if (pressedButtons[2] && !IsInAir)
         {
             _targetLocation.y = jumpHeight;
-            isInAir = true;
+            IsInAir = true;
             rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
             goingUpp = true;
             tempTimer = uppTimer;
             gameObject.layer = airInt;
         }
         //Debug.Log(isInAir);
-        if (isInAir)
+        if (IsInAir)
         {
             tempTimer -= Time.deltaTime;
             if (tempTimer <= 0)
@@ -198,7 +264,7 @@ public class PlayerMovement : MonoBehaviour
             rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
             if(!goingUpp)
             {
-                isInAir = false;
+                IsInAir = false;
                 gameObject.layer = groundInt;
             }
         }
@@ -420,7 +486,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void BouncePlayer(List<GameObject> obstacles)
     {
-        if(!invicible)
+        if(!invicible && !isDead)
         {
         
             List<float> rellevantStarts = new List<float>();
@@ -571,5 +637,6 @@ public class PlayerMovement : MonoBehaviour
     {
         temporaryInvicibility = invicibility;
         invicible = true;
+        animator.SetBool("IsInvicible", true);
     }
 }

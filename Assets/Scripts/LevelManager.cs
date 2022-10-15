@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<Transform> obstacles = new List<Transform>();
     [SerializeField] public float levelSpeed = 1f;
+    [SerializeField] private float arialMultiplyer = 0.05f;
     public bool isDead = false;
     public int score = 0;
     private int delayedScore = 0;
@@ -77,6 +78,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private float levelDificulty = 1f;
     [SerializeField] private float cameraZoomSpeed = 1f;
+    float startDificutly;
 
 
 
@@ -93,12 +95,22 @@ public class LevelManager : MonoBehaviour
         */
         Camera.main.orthographicSize = 5;
         Camera.main.transform.position = new Vector3(0, 2, -100);
+        SetStartDifficutly();
+
+    }
+
+    void SetStartDifficutly()
+    {
+        startDificutly = levelDificulty;
+        levelSpeed = 6 + startDificutly;
+        Camera.main.transform.position = new Vector3(0, 1.5f + startDificutly / 2, -100);
+        Camera.main.orthographicSize = 4.5f + levelDificulty / 2;
 
     }
 
     void Update()
     {
-        if(score > 50)
+        if(score > startDificutly * 50)
         {
             levelDificulty = (float)score / 50;
             Debug.Log(levelDificulty + " " + ((float)score / 50));
@@ -106,34 +118,41 @@ public class LevelManager : MonoBehaviour
 
         for(int i = 0; i < obstacleParentsList.Count; i++)
         {
-            if(!isDead)
+            if (!isDead)
             {
                 obstacleParentsList[i].position -= new Vector3(0, levelSpeed * Time.deltaTime, 0);
             }
 
             for (int j = 0; j < obstacleParentsList[i].childCount; j++)
             {
+                if (obstacleParentsList[i].GetChild(j).GetComponent<Info>().GetObstacleType() == 2 && !isDead)
+                {
+                    obstacleParentsList[i].GetChild(j).position -= new Vector3(0, levelSpeed * arialMultiplyer * Time.deltaTime, 0);
+                }
+
                 Transform temporaryTransform;
                 temporaryTransform = obstacleParentsList[i].GetChild(j).Find("Sprite");
                 //Debug.Log(temporaryTransform.gameObject.name);
-
-                Color color = temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color;
-                //Debug.Log((temporaryTransform.position.y + temporaryTransform.localScale.y / 2) + " " + (temporaryTransform.position.y - temporaryTransform.localScale.y / 2));
-                //Debug.Log((temporaryTransform.position.x + temporaryTransform.localScale.x / 2) + " " + (temporaryTransform.position.x - temporaryTransform.localScale.x / 2));
-                if (temporaryTransform.position.y + temporaryTransform.localScale.y / 2 >= player.transform.position.y &&
-                    temporaryTransform.position.x + temporaryTransform.localScale.x / 2 >= player.transform.position.x &&
-                    temporaryTransform.position.y - temporaryTransform.localScale.y / 2 <= player.transform.position.y &&
-                    temporaryTransform.position.x - temporaryTransform.localScale.x / 2 <= player.transform.position.x)
+                if(temporaryTransform.GetComponent<SpriteRenderer>().sortingLayerID == 1 || temporaryTransform.position.z < player.transform.position.z && player.layer != 9)
                 {
+                    Color color = temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color;
+                    //Debug.Log((temporaryTransform.position.y + temporaryTransform.localScale.y / 2) + " " + (temporaryTransform.position.y - temporaryTransform.localScale.y / 2));
+                    //Debug.Log((temporaryTransform.position.x + temporaryTransform.localScale.x / 2) + " " + (temporaryTransform.position.x - temporaryTransform.localScale.x / 2));
+                    if (temporaryTransform.position.y + temporaryTransform.gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.y / 2 >= player.transform.position.y &&
+                        temporaryTransform.position.x + temporaryTransform.gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.x / 2 >= player.transform.position.x &&
+                        temporaryTransform.position.y - temporaryTransform.gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.y / 2 <= player.transform.position.y &&
+                        temporaryTransform.position.x - temporaryTransform.gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.x / 2 <= player.transform.position.x)
+                    {
 
-                    color.a = seThroughOpacity;
-                    temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
-                    //Debug.Log("happened1");
-                }
-                else
-                {
-                    color.a = 1;
-                    temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                        color.a = seThroughOpacity;
+                        temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                        //Debug.Log("happened1");
+                    }
+                    else
+                    {
+                        color.a = 1;
+                        temporaryTransform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                    }
                 }
 
                 temporaryTransform.parent.transform.position = new Vector3(temporaryTransform.parent.transform.position.x, 
@@ -355,6 +374,11 @@ public class LevelManager : MonoBehaviour
             yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                 obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
 
+            if (temporaryPrefabType[x] == 2)
+            {
+                yPos *= 1 + arialMultiplyer;
+            }
+
             Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
             //Debug.Log("instantiate " + temporaryPrefabType[x]);
             /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +
@@ -472,11 +496,12 @@ public class LevelManager : MonoBehaviour
                     x = Random.Range(0, temp1.Count);
                     x = temp1[x];
                 }
-                else if (temp.Count > 0)
+                else if(temp.Count > 0)
                 {
                     x = Random.Range(0, temp.Count);
                     x = temp[x];
                 }
+                
                 else if (temp2.Count > 0)
                 {
                     x = Random.Range(0, temp2.Count);
@@ -638,6 +663,11 @@ public class LevelManager : MonoBehaviour
                         int z = Random.Range(0, usedStarts.Count);
                         yPos = Random.Range(usedStarts[z] + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                             usedEnds[z] - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
+
+                        if (temporaryPrefabType[x] == 2)
+                        {
+                            yPos *= 1 + arialMultiplyer;
+                        }
                         Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
                         //Debug.Log("instantiate " + temporaryPrefabType[x]);
                         /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +
@@ -748,6 +778,11 @@ public class LevelManager : MonoBehaviour
                 {
                     yPos = Random.Range(obstacleParent.position.y - pathLength + temporaryPrefabVariants[x].transform.lossyScale.y / 2,
                                     obstacleParent.position.y - temporaryPrefabVariants[x].transform.lossyScale.y / 2);
+
+                    if (temporaryPrefabType[x] == 2)
+                    {
+                        yPos *= 1 + arialMultiplyer;
+                    }
                     Instantiate(temporaryPrefabVariants[x], new Vector3(temporaryPrefabVariants[x].GetComponent<Info>().GetBlockPosition(), yPos, 0), Quaternion.Euler(0, 0, 0), obstacleParent.transform);
                     //Debug.Log("instantiate " + temporaryPrefabType[x]);
                     /*Debug.Log("//// " + obstacleVariantBlock[x][0] + " " +

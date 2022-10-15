@@ -10,6 +10,8 @@ public class PlayerHealth : MonoBehaviour
     private LevelManager levelManager;
     private UI ui;
     [SerializeField] private GameObject deathScreen;
+    [SerializeField] private float deathScreenDelay;
+    [SerializeField] private float cameraDeathScrollAccelerator = 0.9f;
 
     private void Start()
     {
@@ -25,22 +27,41 @@ public class PlayerHealth : MonoBehaviour
         curHealth -= damage;
         ui.SetStats(curHealth, -1);
         //Debug.Log("Player took " + damage + " damage.");
-        if(curHealth <= 0)
+
+        playerMovement.StartInvicibility();
+        if (curHealth <= 0)
         {
-            Death();
+            StartCoroutine(Death());
+            StartCoroutine(CameraDeathScroll());
             Debug.Log("Player died");
         }
-        playerMovement.StartInvicibility();
     }
 
-    private void Death()
+    IEnumerator Death()
     {
         //Pause Game
         levelManager.isDead = true;
         playerMovement.isDead = true;
+        SpriteScroller[] array = FindObjectsOfType<SpriteScroller>();
+        for(int i = 0; i < array.Length; i++)
+        {
+            array[i].var = false;
+        }
+        GetComponent<Animator>().SetBool("dead", true);
 
         //Set Death Screen
+        yield return new WaitForSeconds(deathScreenDelay);
         deathScreen.SetActive(true);
         ui.SetDeathStats();
+    }
+
+    IEnumerator CameraDeathScroll()
+    {
+        while (Camera.main.transform.position.y > 0)
+        {
+            Transform tra = Camera.main.transform;
+            tra.position = new Vector3(tra.position.x, tra.position.y * Mathf.Pow(cameraDeathScrollAccelerator, Time.deltaTime), tra.position.z);
+            yield return null;
+        }
     }
 }
