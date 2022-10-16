@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacleblock: 0000000001000000
-  blockPosition: -3
+  blockPosition: -2.7
   damage: 1
   length: 4
   type: 1

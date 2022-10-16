@@ -1,4 +1,5 @@
 using UnityEngine.Audio;
+using System.Collections;
 using System;
 using UnityEngine;
 
@@ -8,14 +9,15 @@ public class AudioManager : MonoBehaviour
     public Sound[] sounds;
     
     public static AudioManager instance;
+    [SerializeField] float volumeDecreaseMultiplyer = 0.9f;
 
     void Awake()
     {
-        if(instance = null)
+        if(instance == null)
             instance = this;
         else
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
             return;
         }
 
@@ -40,8 +42,15 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-            
-        s.source.Play();
+        
+        if(name == "Run")
+        {
+            s.source.PlayDelayed(0.1f);
+        }
+        else
+        {
+            s.source.Play();
+        }
     }
 
     public void Stop(string name)
@@ -54,5 +63,53 @@ public class AudioManager : MonoBehaviour
         }
 
         s.source.Stop();
+    }
+
+    public void DeathScreenVolume()
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == "Ambiance");
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+
+        s.source.volume *= 0.5f;
+    }
+
+    public IEnumerator MusicFade(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            yield break;
+        }
+        while (s.source.volume > 0.05)
+        {
+            s.source.volume *= Mathf.Pow(volumeDecreaseMultiplyer, Time.deltaTime);
+            yield return null;
+        }
+        s.source.Stop();
+        s.source.volume = s.volume;
+    }
+
+    public IEnumerator MusicFade(string name, string newName)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            yield break;
+        }
+        while (s.source.volume > 0.05)
+        {
+            s.source.volume *= Mathf.Pow(volumeDecreaseMultiplyer, Time.deltaTime);
+            yield return null;
+        }
+        s.source.Stop();
+        s.source.volume = s.volume;
+
+        Play(newName);
     }
 }

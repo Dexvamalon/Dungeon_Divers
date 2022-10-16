@@ -42,10 +42,12 @@ public class PlayerMovement : MonoBehaviour
             if (value == true)
             {
                 animator.SetBool("IsJumping", true);
+                FindObjectOfType<AudioManager>().Stop("Run");
             }
             else
             {
                 animator.SetBool("IsJumping", false);
+                FindObjectOfType<AudioManager>().Play("Run");
             }
         }
     }

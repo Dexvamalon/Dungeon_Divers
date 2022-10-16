@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2111364889000857593, guid: ebb48c42c38f743e88746f48f125df7b, type: 3}
       propertyPath: blockPosition
-      value: 3
+      value: 2.7
       objectReference: {fileID: 0}
     - target: {fileID: 2111364889000857593, guid: ebb48c42c38f743e88746f48f125df7b, type: 3}
       propertyPath: obstacleblock.Array.data[0]

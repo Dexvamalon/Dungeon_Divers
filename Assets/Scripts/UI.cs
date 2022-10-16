@@ -44,7 +44,15 @@ public class UI : MonoBehaviour
     void Start()
     {
         FindObjects();
-        defaultColor = healthSlider.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color;
+        if(healthSlider != null)
+        {
+            defaultColor = healthSlider.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color;
+            FindObjectOfType<AudioManager>().Play("LevelMusic");
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().Play("MainMenuMusic");
+        }
     }
 
     void SetSliderColor(Color col)
@@ -63,18 +71,20 @@ public class UI : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
-
     public void LoadScene(string x)
     {
+        FindObjectOfType<AudioManager>().Play("Click");
+        FindObjectOfType<AudioManager>().Stop("Ambiance");
+        FindObjectOfType<AudioManager>().Stop("Run");
+        FindObjectOfType<AudioManager>().Stop("MainMenuMusic");
+        FindObjectOfType<AudioManager>().Stop("LevelMusic");
+        FindObjectOfType<AudioManager>().Stop("DeathMusic");
         SceneManager.LoadScene(x);
     }
 
     public void QuitGame()
     {
+        FindObjectOfType<AudioManager>().Play("Click");
         Application.Quit();
     }
 

@@ -20,6 +20,9 @@ public class PlayerHealth : MonoBehaviour
         levelManager = FindObjectOfType<LevelManager>();
         ui = FindObjectOfType<UI>();
         ui.SetStats(maxHealth, 0);
+
+        FindObjectOfType<AudioManager>().Play("Run");
+        FindObjectOfType<AudioManager>().Play("Ambiance");
     }
 
     public void TakeDamage(float damage)
@@ -31,10 +34,13 @@ public class PlayerHealth : MonoBehaviour
         playerMovement.StartInvicibility();
         if (curHealth <= 0)
         {
+            FindObjectOfType<AudioManager>().Play("Death");
+            FindObjectOfType<AudioManager>().Stop("Run");
+            StartCoroutine(FindObjectOfType<AudioManager>().MusicFade("LevelMusic", "DeathMusic"));
             StartCoroutine(Death());
             StartCoroutine(CameraDeathScroll());
             Debug.Log("Player died");
-            FindObjectOfType<AudioManager>().Play("Death");
+            
             return;
         }
         FindObjectOfType<AudioManager>().Play("Hit");
@@ -54,6 +60,7 @@ public class PlayerHealth : MonoBehaviour
 
         //Set Death Screen
         yield return new WaitForSeconds(deathScreenDelay);
+        FindObjectOfType<AudioManager>().DeathScreenVolume();
         deathScreen.SetActive(true);
         ui.SetDeathStats();
     }
