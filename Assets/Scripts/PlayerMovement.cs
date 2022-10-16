@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -209,6 +210,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
             first = false;
+            FindObjectOfType<AudioManager>().Play("Swipe");
         }
         //right
         if (pressedButtons[1] && currentLane < 3)
@@ -220,6 +222,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(currentLane);
             Debug.Log(_targetLocation.x);
             first = false;
+            FindObjectOfType<AudioManager>().Play("Swipe");
         }
         
         if (goingLeft && transform.position.x < _targetLocation.x)
@@ -242,6 +245,7 @@ public class PlayerMovement : MonoBehaviour
             goingUpp = true;
             tempTimer = uppTimer;
             gameObject.layer = airInt;
+            FindObjectOfType<AudioManager>().Play("Jump");
         }
         //Debug.Log(isInAir);
         if (IsInAir)
@@ -269,6 +273,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 IsInAir = false;
                 gameObject.layer = groundInt;
+                FindObjectOfType<AudioManager>().Play("Land");
             }
         }
         //fast fall

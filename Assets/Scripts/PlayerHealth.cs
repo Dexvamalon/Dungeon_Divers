@@ -34,7 +34,10 @@ public class PlayerHealth : MonoBehaviour
             StartCoroutine(Death());
             StartCoroutine(CameraDeathScroll());
             Debug.Log("Player died");
+            FindObjectOfType<AudioManager>().Play("Death");
+            return;
         }
+        FindObjectOfType<AudioManager>().Play("Hit");
     }
 
     IEnumerator Death()
