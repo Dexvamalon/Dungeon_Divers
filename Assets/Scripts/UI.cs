@@ -8,7 +8,9 @@ using TMPro;
 public class UI : MonoBehaviour
 {
     private Canvas canvas;
-    private GameObject deathScreen;
+    private Canvas deathScreenCanvas;
+    private GameObject finder;
+    [SerializeField] private GameObject deathScreen;
     [SerializeField] private string deathScreenName;
     [SerializeField] private string deathScoreName;
     [SerializeField] private string deathScoreStart;
@@ -64,8 +66,10 @@ public class UI : MonoBehaviour
     {
         if (isInGameScene)
         {
-            canvas = FindObjectOfType<Canvas>();
-            deathScreen = canvas.transform.Find(deathScreenName).gameObject;
+            finder = GameObject.FindGameObjectWithTag("Finder");
+            canvas = finder.transform.Find("Canvas").GetComponent<Canvas>();
+            deathScreenCanvas = finder.transform.Find("DeathScreenCanvas").GetComponent<Canvas>();
+            deathScreen = deathScreenCanvas.transform.Find(deathScreenName).gameObject;
             healthSlider = canvas.transform.Find(healthSliderName).GetComponent<Slider>();
             score = canvas.transform.Find(scoreName).gameObject.GetComponent<TextMeshProUGUI>();
         }

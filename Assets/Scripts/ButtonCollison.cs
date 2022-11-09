@@ -7,7 +7,7 @@ public class ButtonCollison : MonoBehaviour
 {
     void Start()
     {
-        this.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
+        this.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.05f;
     }
 
     public void Scale()
